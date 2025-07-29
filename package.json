@@ -1,0 +1,24 @@
+{
+    "name": "@mustom/validator",
+    "version": "0.0.1",
+    "description": "A validation library for the Mustom project",
+    "homepage": "https://github.com/mustom/validator#readme",
+    "bugs": {
+        "url": "https://github.com/mustom/validator/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mustom/validator.git"
+    },
+    "license": "AGPL v3",
+    "author": {
+        "name": "Ryu Woosik",
+        "email": "ryuwoosil@gmail.com",
+        "url": "https://mustom.com"
+    },
+    "type": "commonjs",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    }
+}
