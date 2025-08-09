@@ -1,7 +1,12 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const { DataTypeError } = require('./helper/custom-error')
+const {
+    BaseError, 
+    DataTypeError, 
+    EmptyArgumentError,
+    UsageError
+} = require('./custom-error')
 
 const validator = function () {
     let input = null
@@ -14,9 +19,13 @@ const validator = function () {
     }
 }
 
+const returnValue = () => {
+    
+}
+
 validator.prototype.single = function (input, option = {}) {
     if (!input && !option.noError) {
-        throw new DataTypeError(
+        throw new EmptyArgumentError(
             '',
             `The input value is required.`
         )
@@ -33,14 +42,14 @@ validator.prototype.single = function (input, option = {}) {
 
 validator.prototype.objectIterate = function (input, rule, option = {}) {
     if (!input) {
-        throw new DataTypeError(
+        throw new EmptyArgumentError(
             '',
             `The input value is required.`
         )
     }
 
     if (input.constructor !== Object) {
-        throw new DataTypeError('invalid-type', `Not an object.`)
+        throw new DataTypeError('invalid-type', `'objectIterate' method requires an object.`)
     }
 
     for (const key in input) {
@@ -543,6 +552,15 @@ validator.prototype.injectionSafeString = function () {
     return this
 }
 
+/**
+ * Validate the value is an alphabet.
+ * It should be contain only alphabet characters (A-Z, a-z).
+ * @example
+ * validator.single('mustom').alphabet() // Passes
+ * validator.single('MUSTOM').alphabet() // Passes
+ * validator.single('mustom123').alphabet() // Throws an error
+ * validator.single('mustom@').alphabet() // Throws an error
+ */
 validator.prototype.alphabet = function () {
     this.dataTypes = [...this.dataTypes, 'alphabet']
 
@@ -563,6 +581,15 @@ validator.prototype.alphabet = function () {
     return this
 }
 
+/**
+ * Validate the value is a capital letter.
+ * It should be contain only capital letters (A-Z).
+ * @example
+ * validator.single('MUSTOM').uppercase() // Passes
+ * validator.single('mustom').uppercase() // Throws an error
+ * validator.single('MUSTOM123').uppercase() // Throws an error
+ * validator.single('MUSTOM@').uppercase() // Throws an error
+ */
 validator.prototype.uppercase = function () {
     this.dataTypes = [...this.dataTypes, 'uppercase']
 
@@ -583,6 +610,15 @@ validator.prototype.uppercase = function () {
     return this
 }
 
+/**
+ * Validate the value is a lowercase letter.
+ * It should be contain only lowercase letters (a-z).
+ * @example
+ * validator.single('mustom').lowercase() // Passes
+ * validator.single('MUSTOM').lowercase() // Throws an error
+ * validator.single('mustom123').lowercase() // Throws an error
+ * validator.single('mustom@').lowercase() // Throws an error
+ */
 validator.prototype.lowercase = function () {
     this.dataTypes = [...this.dataTypes, 'lowercase']
 
@@ -603,6 +639,15 @@ validator.prototype.lowercase = function () {
     return this
 }
 
+/**
+ * Validate the value is an alphanumeric string.
+ * It should be contain only number and alphabet characters (A-Z, a-z, 0-9).
+ * @example
+ * validator.single('mustom').alphaNumeric() // Passes
+ * validator.single('MUSTOM123').alphaNumeric() // Passes
+ * validator.single('mustom@123').alphaNumeric() // Throws an error
+ * validator.single('mustom-123').alphaNumeric() // Throws an error
+ */
 validator.prototype.alphaNumeric = function () {
     this.dataTypes = [...this.dataTypes, 'alphaNumeric']
 
@@ -644,7 +689,16 @@ validator.prototype.password = function () {
     return this
 }
 
-// Example : some-image.jpg
+/**
+ * Validate the value is an image file format.
+ * It should be end with one of the following extensions: jpg, jpeg, png, gif, bmp, tiff, tif, svg, webp.
+ * If the value is null, undefined or empty string, it will be ignored.
+ * @example
+ * validator.single('image.jpg').imageFile() // Passes
+ * validator.single('image.png').imageFile() // Passes
+ * validator.single('image.txt').imageFile() // Throws an error
+ * validator.single('image').imageFile() // Throws an error 
+ */
 validator.prototype.imageFile = function () {
     this.dataTypes = [...this.dataTypes, 'imageFile']
 
@@ -968,8 +1022,30 @@ validator.prototype.regexFalse = function (regex) {
     return this
 }
 
-// TODO : 배열등에서 체크할 때
-validator.prototype.notDuplicate = function () {}
+// Used only the datatype is 'array'
+validator.prototype.notDuplicate = function () {
+
+    if (this.input === null || this.input === undefined || (Array.isArray(this.input) && this.input.length === 0)) {
+        return this
+    }
+
+    if (!Array.isArray(this.input)) {
+        throw new UsageError(
+            'invalid-type',
+            `'notDuplicate' method is only available for array type.`
+        )
+    }
+
+    const uniqueItems = new Set(this.input)
+    if (uniqueItems.size !== this.input.length) {
+        throw new DataTypeError(
+            'duplicate-value',
+            `The value '${this.input}' has duplicate items.`
+        )
+    }
+
+    return this
+}
 
 validator.prototype.gridOption = function () {}
 
