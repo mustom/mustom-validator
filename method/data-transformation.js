@@ -1,32 +1,39 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
+const {
+    BaseError, 
+    DataTypeError, 
+    EmptyArgumentError,
+    UsageError
+} = require('../error/custom-error')
 
-validator.prototype.trim = function () {
-
-}
-
-validator.prototype.toLowerCase = function () {
-
-}
-
-validator.prototype.toUpperCase = function () {
-
-}
-
-validator.prototype.toString = function () {
-
-}
-
-validator.prototype.toNumber = function () {
-
-}
-
-validator.prototype.toArray = function () {
+const dataTransformation = {
+    trim: function () {
     
+    },
+    
+    toLowerCase: function () {
+    
+    },
+    
+    toUpperCase: function () {
+    
+    },
+    
+    toString: function () {
+    
+    },
+    
+    toNumber: function () {
+    
+    },
+    
+    toArray: function () {
+        
+    }
 }
 
 
-module.exports = {
-    validator: new validator()
-}
+
+module.exports = dataTransformation

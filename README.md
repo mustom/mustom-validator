@@ -15,7 +15,7 @@ This library is specifically designed for the Mustom project. Therefore, it's no
 
 Install via NPM
 ```
-npm install @mustom/validator
+npm install ihatecarrot
 ```
 
 

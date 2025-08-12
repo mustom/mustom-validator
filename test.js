@@ -6,7 +6,12 @@ const { validator } = require('./index.js')
 
 
 
+console.log('TEST')
+const aa = validator.single('test11').string()
 
-validator.noRules()
-console.log('TTT')
+console.log(aa)
+
+console.log('TEST2')
+const bb = validator.single('test22').number()
+console.log(bb)
 
