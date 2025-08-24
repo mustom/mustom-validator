@@ -8,6 +8,8 @@ const {
     UsageError
 } = require('../error/custom-error')
 
+const { handleError } = require('../utils/error-handler.js')
+
 const dataType = {
     object: function () {
         this.dataTypes = [...this.dataTypes, 'object']
@@ -98,9 +100,10 @@ const dataType = {
         if (['array'].includes(this.dataTypes)) {
             for (const item of this.input) {
                 if (isNaN(item)) {
-                    throw new DataTypeError(
-                        'invalid-type',
-                        `The value '${this.input}' should be a number.`
+                    handleError(
+                        this,
+                        'DataTypeError',
+                        `The value '${item}' should be a number.`
                     )
                 }
             }
@@ -113,7 +116,11 @@ const dataType = {
         }
 
         if (isNaN(this.input)) {
-            throw new DataTypeError('invalid-type', `The value '${this.input}' should be a number.`)
+            handleError(
+                this,
+                'DataTypeError',
+                `The value '${this.input}' should be a number.`
+            )
         }
 
         return this

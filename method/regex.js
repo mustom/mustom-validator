@@ -8,6 +8,8 @@ const {
     UsageError
 } = require('../error/custom-error')
 
+const errorHandler = require('../utils/error-handler.js')
+
 const regex = {
     regexTrue: function (regex) {
         if (this.input === null || this.input === undefined || this.input === '') {

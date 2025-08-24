@@ -7,6 +7,7 @@ const {
     EmptyArgumentError,
     UsageError
 } = require('../error/custom-error')
+const errorHandler = require('../utils/error-handler.js')
 
 const comparison = {
     is: function (expected) {

@@ -16,54 +16,83 @@ const {
 } = require('./error/custom-error')
 
 const validator = function () {
-    let input = null
-    let output = null
-    let dataTypes = []
-    let errors = []
-    let isValid = true
-    let option = {
-        parseMode: 'definedOnly',
-        returnValue: true,
-        noError: false
+    this.input = null
+    this.refinement = null
+    this.dataTypes = []
+    this.errors = []
+    this.isValid = true
+    this.option = {
+        mode: 'strict',
+        stripUnknown: 'true',
+        softFail: false
     }
+
+    return this
 }
 
-// !noError이면 : 얄짤없이 에러 던진다. (오류 내역은 안 쌓임)
-// noError이면 : 오류내역은 쌓는다. isValid는 false로
+// mode: strict (정의 안된 건 다 에러), flexible (정의 안되면 스킵)
 
 validator.prototype.single = function (input, option = {}) {
-    if (!input && !option.noError) {
-        errorHandler(this, 'EmptyArgumentError', `The input value is required.`)
-    }
-
     this.input = input
-    this.output = input
-    // this.dataTypes = []
-    // this.option = [ ...this.option, ...option ]
+    this.refinement = input
+    this.option = { ...this.option, ...option }
     return this
 }
 
 validator.prototype.objectIterate = function (input, rule, option = {}) {
-    if (!input) {
+    if (!input || !Object.keys(rule).length) {
         throw new EmptyArgumentError(
-            '',
+            'EmptyArgumentError',
             `The input value is required.`
         )
     }
 
-    if (input.constructor !== Object) {
-        throw new DataTypeError('invalid-type', `'objectIterate' method requires an object.`)
+    if (!rule || !Object.keys(rule).length) {
+        throw new EmptyArgumentError(
+            'EmptyArgumentError',
+            `Rule is required.`
+        )
     }
+
+    if (input.constructor !== Object) {
+        throw new EmptyArgumentError(
+            'invalid-type',
+            `'objectIterate' method requires an object.`
+        )
+    }
+
+    if (rule.constructor !== Object) {
+        throw new EmptyArgumentError(
+            'EmptyArgumentError',
+            `'objectIterate' method requires an object.`
+        )
+    }
+
+    this.input = input
+    this.refinement = input
+    this.option = { ...this.option, ...option }
 
     for (const key in input) {
         const targetRule = rule[key]
 
-        // TODO : 테스트 해 봐야 함. 이게 아닐 수도 있음.
-        if (!targetRule) {
+        // Throw error if the key is not defined in the rule
+        if (mode === 'strict' && !targetRule) {
+            if (this.option.softFail) {
+                this.errors.push(new UsageError('undefined-key', `Key '${key}' is undefined.`))
+                this.isValid = false
+                continue
+            }
+
             throw new DataTypeError('undefined-key', `Key '${key}' is undefined.`)
         }
 
+        // If the key is not defined in the rule, and the option 'stripUnknown' is true, remove it from refinement
+        if (!targetRule && this.option.stripUnknown) {
+            delete this.refinement[key]
+        }
+
         this.input = input[key]
+
         if (targetRule.constructor === Object) {
             this.objectIterate(this.input, targetRule)
         } else {
@@ -77,13 +106,11 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
         }
     }
 
-    this.output = dataToReturn
 
     return this
 }
 
-validator.prototype.arrayObjectIterate = function (target, rule) {
-
+validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
     if (!Array.isArray(value)) {
         throw new DataTypeError(
             'invalid-type',
@@ -106,6 +133,9 @@ Object.assign(validator.prototype, dataTransformation)
 Object.assign(validator.prototype, misc)
 
 
+// const Validator = new validator()
+
+// export default Validator
 
 module.exports = {
     validator: new validator()

@@ -8,6 +8,8 @@ const {
     UsageError
 } = require('../error/custom-error')
 
+const errorHandler = require('../utils/error-handler.js')
+
 const misc = {
     gridOption: function () {
         return this

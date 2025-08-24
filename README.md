@@ -3,37 +3,31 @@
 > This version is NOT tested. Please do NOT use this library.
 
 ### About This Library
-#:carrot:
-
-
-
 This library is specifically designed for the Mustom project. Therefore, it's not a general-purpose validation library and might not be suitable for your project.
 
 
 
 ### Installation
-
 Install via NPM
 ```
 npm install ihatecarrot
 ```
 
-
 ### Usage Examples
 
 To use the validator, import the `validator` instance and call the desired validation methods. Here is a simple example:
 
-`
-// Common JS
-const { Validator } = require('@mustom/validator')
+
+CommonJS
+```
+const { Validator } = require('ihatecarror')
+```
 
 
-
-// ES Import
-import { Validator } from '@mustom/validator'
-
-`
-
+ES Modules
+```
+import { Validator } from 'ihatecarror'
+```
 
 ```
 # Validate if the input value 23 is natural number, and not empty value.
@@ -95,18 +89,74 @@ validator.single({}).string()
 
 ### Options
 
-- parseMode
-- returnValue
-- noError
+mode ('strict', 'flexible')
+This option is only applied for objectIterable, and arrayObjectIterate. If it is 'strict' validator will throw error if there is unknown(undefined) key in the input. It is useful when you check the value of request body in an API. If it is set as 'flexible' validator will ignore it.
+
+
+stripUnknown (true, false)
+This option is only applied for objectIterable, and arrayObjectIterate. If it is set as true, validator will remove this element from the refinement. If it is set as false, this element still in the refinement.
+
+softFail (true, false)
+softFail opton is only apply for validation fail case. It will throw error if it is not a validation fail case, even if softFail option is set as true.
+(e.g. empty argument, or )
 
 
 
-### Type Checker
+### Methods
 
 
+Data type check
+- `object()`
+- `arrayOfObject()`
+- `array()`
+- `string()`
+- `boolean()`
+- `number()`
+- `nonNegativeNumber()`
+- `positiveNumber()`
+- `naturalNumber()`
+- `wholeNumber()`
+- `integer()`
+- `negativeInteger()`
+- `email()`
+- `url()`
+- `ip()`
+- `code()`
+- `path()`
+- `injectionSafeString()`
+- `alphabet()`
+- `uppercase()`
+- `lowercase()`
+- `alphaNumeric()`
+- `password()`
+- `imageFile()`
+- `dateTime()`
+- `dateOnly()`
 
-### Condition Checker
+Comparison
+- `is(expected)`
+- `isNot()`
+- `minValue(limit)`
+- `maxValue(limit)`
+- `in()`
+- `notIn()`
+- `exactLength(expected)`
+- `minLength(expected)`
+- `maxLength(expected)`
 
+Condition
+- `required()`
+- `notEmpty()`
+- `noWhitespace()`
+- `notDuplicate()`
+
+RegEx
+- `regexTrue(regex)`
+- `regexFalse(regex)`
+
+Misc
+- `gridOption()`
+- `noRules()`
 
 
 ### Data Transformer
@@ -139,7 +189,7 @@ validator.single(' MUSTOM ').string().toLowerCase().trim()
 ### Custom Error Object
 The project includes custom error classes for better error handling:
 
-If input value is not passed validation rule(s), validator will thorow error if 'noError : true' option is not specified.
+If input value is not passed validation rule(s), validator will thorow error if 'softFail : true' option is not specified.
 In this case, validator will ... in custom error object.
 
 
@@ -154,10 +204,9 @@ These errors extend the built-in Error class and provide specific messages for d
 This library is under AGPL v3 Licensed. (It is same as the license of Mustom)
 
 ### Git Repository
-[GitHub] (https://github.com/mustom/validator)
+[GitHub] (https://github.com/mustom/ihatecarrot)
 
 ### Mustom Project Website
-
 [MUSTOM HQ] (https://mustom.com/)
 
 

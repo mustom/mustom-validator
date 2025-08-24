@@ -7,20 +7,30 @@ const {
     EmptyArgumentError,
     UsageError
 } = require('../error/custom-error')
+const { handleError } = require('../utils/error-handler.js')
 
 const condition = {
+    /**
+     * Throws an error if the input is undefined.
+     * Please note that `null` is a valid value. If you want to check for null, use `notEmpty`.
+     */
     required: function () {
-        // Note : 'null' is a valid value. If you want to check the null value, use 'notEmpty'.
         if (this.input === undefined) {
-            throw new DataTypeError('missing-required', `The value '${this.input}' is required.`)
+            handleError(
+                this,
+                'missing-required',
+                `The value '${this.input}' is required.`
+            )
         }
 
         return this
     },
-
+    /**
+     * Throws an error if the input is null, empty string, or undefined.
+     * If input is an array, or an object, it checks if they are empty.
+     */
     notEmpty: function () {
-        // Note : 0 is considered as a valid value.
-        if (this.input === null || this.input === '') {
+        if (this.input === null || this.input === '' || this.input === undefined) {
             throw new DataTypeError('invalid-value', `The value is empty.`)
         }
 

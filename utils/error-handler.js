@@ -2,17 +2,17 @@
 // Copyright © Ryu Woosik. All rights reserved.
 
 const {
-    BaseError, 
-    DataTypeError, 
+    BaseError,
+    DataTypeError,
     EmptyArgumentError,
     UsageError
 } = require('../error/custom-error')
 
-const handleError = (thisObj, errorCode, errorMessage) => {
-
-    if (thisObj.option.noError) {
-        thisObj.isValid = false
-        thisObj.errors.push({
+const handleError = (thisObject, errorCode, errorMessage) => {
+    
+    if (thisObject.option.softFail) {
+        thisObject.isValid = false
+        thisObject.errors.push({
             code: errorCode,
             message: errorMessage
         })
@@ -32,4 +32,4 @@ const handleError = (thisObj, errorCode, errorMessage) => {
     }
 }
 
-module.exports = handleError
+module.exports = { handleError }
