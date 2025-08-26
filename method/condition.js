@@ -7,7 +7,7 @@ const {
     EmptyArgumentError,
     UsageError
 } = require('../error/custom-error')
-const { handleError } = require('../utils/error-handler.js')
+const { errorHandler } = require('../util/error-handler.js')
 
 const condition = {
     /**
@@ -16,7 +16,7 @@ const condition = {
      */
     required: function () {
         if (this.input === undefined) {
-            handleError(
+            errorHandler(
                 this,
                 'missing-required',
                 `The value '${this.input}' is required.`
@@ -31,18 +31,18 @@ const condition = {
      */
     notEmpty: function () {
         if (this.input === null || this.input === '' || this.input === undefined) {
-            throw new DataTypeError('invalid-value', `The value is empty.`)
+            errorHandler(this, 'DataTypeError', `The value is empty.`)
         }
 
         if (['array'].includes(this.dataTypes)) {
             if (!this.input.length) {
-                throw new DataTypeError('invalid-value', `The value of array is empty.`)
+                errorHandler(this, 'DataTypeError', `The value of array is empty.`)
             }
         }
 
         if (['object'].includes(this.dataTypes)) {
             if (!Object.keys(this.input).length) {
-                throw new DataTypeError('invalid-value', `The value of object is empty.`)
+                errorHandler(this, 'DataTypeError', `The value of object is empty.`)
             }
         }
 
@@ -58,10 +58,7 @@ const condition = {
         const isPassed = regex.test(this.input)
 
         if (isPassed) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should not contain whitespace.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should not contain whitespace.`)
         }
 
         return this
@@ -78,18 +75,12 @@ const condition = {
         }
 
         if (!Array.isArray(this.input)) {
-            throw new UsageError(
-                'invalid-type',
-                `'notDuplicate' method is only available for array type.`
-            )
+            errorHandler(this, 'UsageError', `'notDuplicate' method is only available for array type.`)
         }
 
         const uniqueItems = new Set(this.input)
         if (uniqueItems.size !== this.input.length) {
-            throw new DataTypeError(
-                'duplicate-value',
-                `The value '${this.input}' has duplicate items.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' has duplicate items.`)
         }
 
         return this

@@ -8,7 +8,7 @@ const {
     UsageError
 } = require('../error/custom-error')
 
-const handleError = (thisObject, errorCode, errorMessage) => {
+const errorHandler = (thisObject, errorCode, errorMessage) => {
     
     if (thisObject.option.softFail) {
         thisObject.isValid = false
@@ -32,4 +32,4 @@ const handleError = (thisObject, errorCode, errorMessage) => {
     }
 }
 
-module.exports = { handleError }
+module.exports = { errorHandler }

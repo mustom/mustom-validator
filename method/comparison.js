@@ -7,7 +7,7 @@ const {
     EmptyArgumentError,
     UsageError
 } = require('../error/custom-error')
-const errorHandler = require('../utils/error-handler.js')
+const { errorHandler } = require('../util/error-handler.js')
 
 const comparison = {
     is: function (expected) {
@@ -16,10 +16,7 @@ const comparison = {
         }
 
         if (this.input !== expected) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should be '${expected}'`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be '${expected}'`)
         }
 
         return this
@@ -30,10 +27,7 @@ const comparison = {
         }
 
         if (this.input === expected) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should not be '${expected}'`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be '${expected}'`)
         }
 
         return this
@@ -44,17 +38,11 @@ const comparison = {
         }
 
         if (isNaN(+this.input)) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should be a number.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a number.`)
         }
 
         if (this.input < limit) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should be equan or greater than '${expected}'`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be equal or greater than '${limit}'`)
         }
 
         return this
@@ -65,24 +53,19 @@ const comparison = {
         }
 
         if (isNaN(+this.input)) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should be a number.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a number.`)
         }
 
         if (this.input > limit) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' should be equal or less than '${limit}'`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be equal or less than '${limit}'`)
         }
 
         return this
     },
     in: function (comparison) {
+        // Since this is a usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(comparison)) {
-            throw new DataTypeError(
+            throw new UsageError(
                 'internal-error',
                 `The type of '${expected}' should be an Array.`
             )
@@ -91,26 +74,21 @@ const comparison = {
         if (Array.isArray(this.input)) {
             for (const item of this.input) {
                 if (!comparison.includes(item)) {
-                    throw new DataTypeError(
-                        'invalid-value',
-                        `The value '${item}' is not in the list.`
-                    )
+                    errorHandler(this, 'DataTypeError', `The value '${item}' is not in the list.`)
                 }
             }
         }
 
         if (!comparison.includes(this.input)) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' is not in the list.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' is not in the list.`)
         }
 
         return this
     },
     notIn: function (comparison) {
+        // Since this is a usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(comparison)) {
-            throw new DataTypeError(
+            throw new UsageError(
                 'internal-error',
                 `The type of '${expected}' should be an Array.`
             )
@@ -119,19 +97,13 @@ const comparison = {
         if (Array.isArray(this.input)) {
             for (const item of this.input) {
                 if (comparison.includes(item)) {
-                    throw new DataTypeError(
-                        'invalid-value',
-                        `The value '${item}' is not in the list.`
-                    )
+                    errorHandler(this, 'DataTypeError', `The value '${item}' is not in the list.`)
                 }
             }
         }
 
         if (comparison.includes(this.input)) {
-            throw new DataTypeError(
-                'invalid-value',
-                `The value '${this.input}' is not in the list.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${item}' is not in the list.`)
         }
 
         return this
@@ -141,13 +113,25 @@ const comparison = {
             return this
         }
 
-        const length = this.input.length
+        let length = 0
+
+        if (Array.isArray(this.input) || typeof this.input === 'string') {
+            length = this.input.length
+        }
+
+        if (typeof this.input === 'number') {
+            if (!isNaN(myNum)) {
+                console.log("이것은 유효한 숫자입니다.");
+            }
+        }
+
+
+
+
+        Object.keys(obj).length
 
         if (expected !== length) {
-            throw new DataTypeError(
-                'invalid-length',
-                `The length of '${this.input}' should be ${expected}.`
-            )
+            errorHandler(this, 'DataTypeError', `The length of '${this.input}' should be ${expected}.`)
         }
 
         return this
@@ -160,10 +144,7 @@ const comparison = {
         const length = this.input.length
 
         if (expected > length) {
-            throw new DataTypeError(
-                'too-short',
-                `The length of '${this.input}' should be equal or greater than ${expected}.`
-            )
+            errorHandler(this, 'DataTypeError', `The length of '${this.input}' should be equal or greater than ${expected}.`)
         }
 
         return this
@@ -176,10 +157,7 @@ const comparison = {
         const length = this.input.length
 
         if (expected < length) {
-            throw new DataTypeError(
-                'too-long',
-                `The length of '${this.input}' should be equal or less than ${expected}.`
-            )
+            errorHandler(this, 'DataTypeError', `The length of '${this.input}' should be equal or less than ${expected}.`)
         }
 
         return this

@@ -8,7 +8,7 @@ const {
     UsageError
 } = require('../error/custom-error')
 
-const errorHandler = require('../utils/error-handler.js')
+const { errorHandler } = require('../util/error-handler.js')
 
 const regex = {
     regexTrue: function (regex) {
@@ -19,7 +19,7 @@ const regex = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError('invalid-value', `The value '${this.input}' is wrong format.`)
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' is wrong format.`)
         }
 
         return this
@@ -32,7 +32,7 @@ const regex = {
         const isPassed = regex.test(this.input)
 
         if (isPassed) {
-            throw new DataTypeError('invalid-value', `The value '${this.input}' is wrong format.`)
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' is wrong format.`)
         }
 
         return this

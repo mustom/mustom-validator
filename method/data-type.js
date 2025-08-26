@@ -8,7 +8,7 @@ const {
     UsageError
 } = require('../error/custom-error')
 
-const { handleError } = require('../utils/error-handler.js')
+const { errorHandler } = require('../util/error-handler.js')
 
 const dataType = {
     object: function () {
@@ -19,7 +19,7 @@ const dataType = {
         }
 
         if (this.input.constructor !== Object) {
-            throw new DataTypeError('invalid-request', `Invalid Request`)
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be an object.`)
         }
 
         return this
@@ -35,7 +35,7 @@ const dataType = {
         }
 
         if (!Array.isArray(this.input)) {
-            throw new DataTypeError('invalid-type', `The value '${this.input}' should be an array.`)
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be an array.`)
         }
 
         return this
@@ -57,7 +57,7 @@ const dataType = {
         }
 
         if (typeof this.input !== 'string') {
-            throw new DataTypeError('invalid-type', `The value '${this.input}' should be a string.`)
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a string.`)
         }
 
         return this
@@ -78,10 +78,7 @@ const dataType = {
         }
 
         if (typeof this.input !== 'boolean') {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a boolean.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a boolean.`)
         }
 
         return this
@@ -100,11 +97,7 @@ const dataType = {
         if (['array'].includes(this.dataTypes)) {
             for (const item of this.input) {
                 if (isNaN(item)) {
-                    handleError(
-                        this,
-                        'DataTypeError',
-                        `The value '${item}' should be a number.`
-                    )
+                    errorHandler(this, 'DataTypeError', `The value '${item}' should be a number.`)
                 }
             }
             // Empty array is allowed. If you want to check the empty array, use 'notEmpty' method.
@@ -116,7 +109,7 @@ const dataType = {
         }
 
         if (isNaN(this.input)) {
-            handleError(
+            errorHandler(
                 this,
                 'DataTypeError',
                 `The value '${this.input}' should be a number.`
@@ -143,9 +136,10 @@ const dataType = {
         }
 
         if (isNaN(this.input) || this.input < 0) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a positive number.`
+            errorHandler(
+                this,
+                'DataTypeError',
+                `The value '${this.input}' should be a non-negative number.`
             )
         }
 
@@ -169,8 +163,9 @@ const dataType = {
         }
 
         if (isNaN(this.input) || this.input <= 0) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be a positive number.`
             )
         }
@@ -195,8 +190,9 @@ const dataType = {
         }
 
         if (this.input % 1 !== 0 || this.input <= 0 || isNaN(this.input)) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be a natural number.`
             )
         }
@@ -221,8 +217,9 @@ const dataType = {
         }
 
         if (this.input % 1 !== 0 || !this.input < 0 || isNaN(this.input)) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be a whole number.`
             )
         }
@@ -247,8 +244,9 @@ const dataType = {
         }
 
         if (this.input % 1 !== 0 || isNaN(this.input)) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be an integer.`
             )
         }
@@ -273,9 +271,10 @@ const dataType = {
         }
 
         if (this.input % 1 !== 0 || !this.input >= 0 || isNaN(this.input)) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be an integer.`
+            errorHandler(
+                this,
+                'DataTypeError',
+                `The value '${this.input}' should be a negative integer.`
             )
         }
 
@@ -297,13 +296,11 @@ const dataType = {
 
         const regex =
             /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
+
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a correct email format.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a correct email format.`)
         }
 
         return this
@@ -327,10 +324,7 @@ const dataType = {
         const regex = /^http[s]?:\/\//
         const isPassed = regex.test(this.input)
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a URL format.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid URL format.`)
         }
 
         return this
@@ -356,10 +350,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a IP format.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid IP format.`)
         }
 
         return this
@@ -383,8 +374,9 @@ const dataType = {
         }
 
         if (this.input.length < 50) {
-            throw new DataTypeError(
-                'too-long',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be less than 50 characters.`
             )
         }
@@ -392,8 +384,9 @@ const dataType = {
         const regex = /^[A-Za-z][A-Za-z0-9_-]*$/
         const isPassed = regex.test(this.input)
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' shoude be start with alphabet, and should be contain only number, alphabet, underscore, and hyphen.`
             )
         }
@@ -413,8 +406,9 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be contain only number, alphabet, underscore, and hyphen.`
             )
         }
@@ -442,9 +436,10 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be contain only number, alphabet, underscore, dot, 골뱅이이 and hyphen.`
+            errorHandler(
+                this,
+                'DataTypeError',
+                `The value '${this.input}' should be contain only number, alphabet, underscore, dot, at sign, and hyphen.`
             )
         }
 
@@ -471,10 +466,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be an alphabet.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be an alphabet.`)
         }
 
         return this
@@ -500,10 +492,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a capital letter.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a capital letter.`)
         }
 
         return this
@@ -529,10 +518,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a lowercase.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a lowercase.`)
         }
 
         return this
@@ -558,8 +544,9 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
+            errorHandler(
+                this,
+                'DataTypeError',
                 `The value '${this.input}' should be a number and alphabet.`
             )
         }
@@ -579,10 +566,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a valid password format.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid password format.`)
         }
 
         return this
@@ -610,11 +594,8 @@ const dataType = {
         if (Array.isArray(this.input)) {
             for (const item of this.input) {
                 const valueToLowerCase = item.toLowerCase()
-                if (regex.test(valueToLowerCase)) {
-                    throw new DataTypeError(
-                        'invalid-value',
-                        `The value '${item}' is not in the list.`
-                    )
+                if (!regex.test(valueToLowerCase)) {
+                    errorHandler(this, 'DataTypeError', `The value '${item}' should be a valid image file format.`)
                 }
             }
 
@@ -624,10 +605,7 @@ const dataType = {
         const valueToLowerCase = this.input.toLowerCase()
         const isPassed = regex.test(valueToLowerCase)
         if (!isPassed) {
-            throw new DataTypeError(
-                'invalid-type',
-                `The value '${this.input}' should be a valid image file format.`
-            )
+            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid image file format.`)
         }
 
         return this
