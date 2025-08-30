@@ -12,8 +12,6 @@ const { errorHandler } = require('../util/error-handler.js')
 
 const dataType = {
     object: function () {
-        this.dataTypes = [...this.dataTypes, 'object']
-
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
         }
@@ -28,8 +26,6 @@ const dataType = {
         return this
     },
     array: function (rule = 'all') {
-        this.dataTypes = [...this.dataTypes, 'array']
-
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
         }
@@ -50,7 +46,6 @@ const dataType = {
      */
     string: function () {
         console.log(this.input)
-        this.dataTypes = [...this.dataTypes, 'string']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -71,7 +66,6 @@ const dataType = {
      * validator.single('true').boolean() // Throws an error
      */
     boolean: function () {
-        this.dataTypes = [...this.dataTypes, 'boolean']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -93,8 +87,8 @@ const dataType = {
      * validator.single('mustom').number() // Throws an error
      */
     number: function () {
-        this.dataTypes = [...this.dataTypes, 'number']
-        if (['array'].includes(this.dataTypes)) {
+
+        if (['array'].includes(this.dataType)) {
             for (const item of this.input) {
                 if (isNaN(item)) {
                     errorHandler(this, 'DataTypeError', `The value '${item}' should be a number.`)
@@ -129,7 +123,6 @@ const dataType = {
      * validator.single(-1).nonNegativeNumber() // Throws an error
      */
     nonNegativeNumber: function () {
-        this.dataTypes = [...this.dataTypes, 'nonNegativeNumber']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -156,7 +149,6 @@ const dataType = {
      * validator.single(0).positiveNumber() // Throws an error
      */
     positiveNumber: function () {
-        this.dataTypes = [...this.dataTypes, 'positiveNumber']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -183,7 +175,6 @@ const dataType = {
      * validator.single(0).naturalNumber() // Throws an error
      */
     naturalNumber: function () {
-        this.dataTypes = [...this.dataTypes, 'naturalNumber']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -210,7 +201,6 @@ const dataType = {
      * validator.single(-1).wholeNumber() // Throws an error
      */
     wholeNumber: function () {
-        this.dataTypes = [...this.dataTypes, 'wholeNumber']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -237,7 +227,7 @@ const dataType = {
      * validator.single(1.1).integer() // Throws an error
      */
     integer: function () {
-        this.dataTypes = [...this.dataTypes, 'integer']
+        this.dataType = [...this.dataType, 'integer']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -264,7 +254,6 @@ const dataType = {
      * validator.single(0).negativeInteger() // Throws an error
      */
     negativeInteger: function () {
-        this.dataTypes = [...this.dataTypes, 'negativeInteger']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -288,7 +277,6 @@ const dataType = {
      * validator.single('mustom').email() // Throws an error
      */
     email: function () {
-        this.dataTypes = [...this.dataTypes, 'email']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -315,7 +303,6 @@ const dataType = {
      * validator.single('ftp://mustom.com').url() // Throws an error
      */
     url: function () {
-        this.dataTypes = [...this.dataTypes, 'url']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -339,7 +326,6 @@ const dataType = {
      * validator.single('mustom.com').ip() // Throws an error
      */
     ip: function () {
-        this.dataTypes = [...this.dataTypes, 'ip']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -367,7 +353,6 @@ const dataType = {
      */
 
     code: function () {
-        this.dataTypes = [...this.dataTypes, 'code']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -396,7 +381,6 @@ const dataType = {
 
     // Example : 'privacy_policy_02'
     path: function () {
-        this.dataTypes = [...this.dataTypes, 'path']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -426,7 +410,6 @@ const dataType = {
      * validator.single('mus/tom').code() // Throws an error
      */
     injectionSafeString: function () {
-        this.dataTypes = [...this.dataTypes, 'injectionSafeString']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -456,7 +439,6 @@ const dataType = {
      * validator.single('mustom@').alphabet() // Throws an error
      */
     alphabet: function () {
-        this.dataTypes = [...this.dataTypes, 'alphabet']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -482,7 +464,6 @@ const dataType = {
      * validator.single('MUSTOM@').uppercase() // Throws an error
      */
     uppercase: function () {
-        this.dataTypes = [...this.dataTypes, 'uppercase']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -508,7 +489,6 @@ const dataType = {
      * validator.single('mustom@').lowercase() // Throws an error
      */
     lowercase: function () {
-        this.dataTypes = [...this.dataTypes, 'lowercase']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -534,7 +514,6 @@ const dataType = {
      * validator.single('mustom-123').alphaNumeric() // Throws an error
      */
     alphaNumeric: function () {
-        this.dataTypes = [...this.dataTypes, 'alphaNumeric']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -555,7 +534,6 @@ const dataType = {
     },
 
     password: function () {
-        this.dataTypes = [...this.dataTypes, 'password']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -583,7 +561,6 @@ const dataType = {
      * validator.single('image').imageFile() // Throws an error
      */
     imageFile: function () {
-        this.dataTypes = [...this.dataTypes, 'imageFile']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -612,7 +589,6 @@ const dataType = {
     },
 
     dateTime: function () {
-        this.dataTypes = [...this.dataTypes, 'dateTime']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this
@@ -622,7 +598,6 @@ const dataType = {
     },
 
     dateOnly: function () {
-        this.dataTypes = [...this.dataTypes, 'dateOnly']
 
         if (this.input === null || this.input === undefined || this.input === '') {
             return this

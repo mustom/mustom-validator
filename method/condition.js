@@ -34,23 +34,34 @@ const condition = {
             errorHandler(this, 'DataTypeError', `The value is empty.`)
         }
 
-        if (['array'].includes(this.dataTypes)) {
-            if (!this.input.length) {
-                errorHandler(this, 'DataTypeError', `The value of array is empty.`)
-            }
+        if (this.dataType === 'array' && !this.input.length) {
+            errorHandler(this, 'DataTypeError', `The value of array is empty.`)
         }
 
-        if (['object'].includes(this.dataTypes)) {
-            if (!Object.keys(this.input).length) {
-                errorHandler(this, 'DataTypeError', `The value of object is empty.`)
-            }
+        if (this.dataType === 'object' && !Object.keys(this.input).length) {
+            errorHandler(this, 'DataTypeError', `The value of object is empty.`)
+        }
+
+        if (this.dataType === 'map' && !this.input.size) {
+            errorHandler(this, 'DataTypeError', `The value of map is empty.`)
+        }
+
+        if (this.dataType === 'set' && !this.input.size) {
+            errorHandler(this, 'DataTypeError', `The value of set is empty.`)
         }
 
         return this
     },
-
+    /**
+     * Checks if the string contains any whitespace characters (spaces, tabs, etc.).
+     * It only works when the data type is 'string'.
+     */
     noWhitespace: function () {
         if (this.input === null || this.input === undefined || this.input === '') {
+            return this
+        }
+
+        if (this.dataType !== 'string') {
             return this
         }
 
@@ -63,19 +74,17 @@ const condition = {
 
         return this
     },
-
-    // Used only the datatype is 'array'
+    /**
+     * Checks if the array contains duplicate items.
+     * It only works when the data type is 'array'.
+     */
     notDuplicate: function () {
-        if (
-            this.input === null ||
-            this.input === undefined ||
-            (Array.isArray(this.input) && this.input.length === 0)
-        ) {
-            return this
+        if (this.dataType !== 'array') {
+            errorHandler(this, 'UsageError', `'notDuplicate' method is only available for array type.`)
         }
 
-        if (!Array.isArray(this.input)) {
-            errorHandler(this, 'UsageError', `'notDuplicate' method is only available for array type.`)
+        if (this.input === null || this.input === undefined) {
+            return this
         }
 
         const uniqueItems = new Set(this.input)

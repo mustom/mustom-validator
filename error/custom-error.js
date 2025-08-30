@@ -26,7 +26,6 @@ class BaseError extends Error {
         }
     }
 }
-
 class DataTypeError extends BaseError {
     constructor(code, message, options = {}) {
         super(code, message, options)

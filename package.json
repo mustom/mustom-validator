@@ -1,14 +1,14 @@
 {
-    "name": "ihatecarrot",
+    "name": "mustom-validator",
     "version": "0.0.1",
     "description": "A validation library for the Mustom project",
-    "homepage": "https://github.com/mustom/ihatecarrot#readme",
+    "homepage": "https://github.com/mustom/mustom-validator#readme",
     "bugs": {
-        "url": "https://github.com/mustom/ihatecarrot/issues"
+        "url": "https://github.com/mustom/mustom-validator/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/mustom/ihatecarrot.git"
+        "url": "git+https://github.com/mustom/mustom-validator.git"
     },
     "license": "AGPL v3",
     "author": {

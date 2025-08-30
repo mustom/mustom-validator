@@ -23,15 +23,16 @@ const {
 const validator = function () {
     this.input = null
     this.refinement = null
-    // this.dataTypes = []
+    // this.dataType = []
     this.dataType = null
     this.errors = []
     this.isValid = true
     this.option = {
-        itemValdationMode: 'all', // all(전부 조건), some (하나라도 조건), none, one, any
+        itemValidationMode: 'all', // all(전부 조건), some (하나라도 조건), none, one, any
         entryValidationMode: 'strict',
         stripUnknown: 'true',
-        softFail: false
+        softFail: false,
+        ignoreUsageError: true
     }
 
     // item : Used for indexed data structure (Array, Set)
@@ -166,7 +167,6 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
     this.input = input
     this.refinement = input
     this.option = { ...this.option, ...option }
-
 
     // const results = input.map((item) => {
     //     const v = new validator()

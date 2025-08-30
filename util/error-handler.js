@@ -26,6 +26,16 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
         case 'EmptyArgumentError':
             throw new EmptyArgumentError(errorCode, errorMessage)
         case 'UsageError':
+            if (thisObject.ignoreUsageError) {
+                thisObject.isValid = false
+                thisObject.errors.push({
+                    code: errorCode,
+                    message: errorMessage
+                })
+
+                return
+            }
+            
             throw new UsageError(errorCode, errorMessage)
         default:
             throw new BaseError(errorCode, errorMessage)

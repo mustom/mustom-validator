@@ -37,8 +37,8 @@ const comparison = {
             return this
         }
 
-        if (isNaN(+this.input)) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a number.`)
+        if (this.dataType !== 'number') {
+            errorHandler(this, 'UsageError', `The value '${this.input}' should be a number.`)
         }
 
         if (this.input < limit) {
@@ -52,8 +52,8 @@ const comparison = {
             return this
         }
 
-        if (isNaN(+this.input)) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a number.`)
+        if (this.dataType !== 'number') {
+            errorHandler(this, 'UsageError', `The value '${this.input}' should be a number.`)
         }
 
         if (this.input > limit) {
@@ -71,7 +71,7 @@ const comparison = {
             )
         }
 
-        if (Array.isArray(this.input)) {
+        if (this.dataType === 'array') {
             for (const item of this.input) {
                 if (!comparison.includes(item)) {
                     errorHandler(this, 'DataTypeError', `The value '${item}' is not in the list.`)
@@ -94,7 +94,7 @@ const comparison = {
             )
         }
 
-        if (Array.isArray(this.input)) {
+        if (this.dataType === 'array') {
             for (const item of this.input) {
                 if (comparison.includes(item)) {
                     errorHandler(this, 'DataTypeError', `The value '${item}' is not in the list.`)
@@ -115,20 +115,21 @@ const comparison = {
 
         let length = 0
 
-        if (Array.isArray(this.input) || typeof this.input === 'string') {
+        if (['string', 'array'].includes(this.dataType)) {
+            length = this.input.length
+        }
+        
+        if (['set', 'map'].includes(this.dataType)) {
             length = this.input.length
         }
 
-        if (typeof this.input === 'number') {
-            if (!isNaN(myNum)) {
-                console.log("이것은 유효한 숫자입니다.");
-            }
+        if (this.dataType === 'object') {
+            length = Object.keys(this.input).length
         }
 
-
-
-
-        Object.keys(obj).length
+        if (this.dataType === 'number') {
+            length = this.input.toString().length
+        }
 
         if (expected !== length) {
             errorHandler(this, 'DataTypeError', `The length of '${this.input}' should be ${expected}.`)
