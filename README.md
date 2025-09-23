@@ -3,14 +3,12 @@
 > This version is NOT tested. Please do NOT use this library.
 
 ### About This Library
-This library is specifically designed for the Mustom project. Therefore, it's not a general-purpose validation library and might not be suitable for your project.
-
-
+This library was made specifically for the Mustom e-commerce platform. Because it's not a general-purpose validation library, it might not be a good fit for your project. You have lots of great options like Joi and Zod, so I'd recommend you skip this one if you're not working on a Mustom project.
 
 ### Installation
 Install via NPM
 ```
-npm install ihatecarrot
+npm install mustom-validator
 ```
 
 ### Usage Examples
@@ -20,13 +18,13 @@ To use the validator, import the `validator` instance and call the desired valid
 
 CommonJS
 ```
-const { Validator } = require('ihatecarror')
+const { Validator } = require('mustom-validator')
 ```
 
 
 ES Modules
 ```
-import { Validator } from 'ihatecarror'
+import { Validator } from 'mustom-validator'
 ```
 
 ```
@@ -194,17 +192,50 @@ In this case, validator will ... in custom error object.
 
 
 - `BaseError`
-- `DataTypeError`
-- `EmptyArgumentError`
+- `ValidationError`
+- `UsageError`
 - `UsageError`
 
 These errors extend the built-in Error class and provide specific messages for different validation failures.
+
+
+### Additional Utility
+This module provide addtional utility 'dataTypeChecker'.
+
+
+```
+import { dataTypeChecker } from 'mustom-validator'
+
+const input1 = 'foo'
+const input2 = 12345
+const input3 = { foo: 'abc', bar: 123 }
+const input4 = [ 'foo', 'bar', 'baz' ]
+const dataType1 = dataTypeChecker(input1)
+const dataType2 = dataTypeChecker(input2)
+const dataType3 = dataTypeChecker(input3)
+const dataType3 = dataTypeChecker(input4)
+
+console.log(dataType1) // Return 'string'
+console.log(dataType2) // Return 'number'
+console.log(dataType3) // Return 'object'
+console.log(dataType4) // Return 'array'
+```
+
+
+Return values will be one of the following:
+
+`null`, `string`, `boolean`, `number`, `undefined`, `nan`, `array`, `regexp`, `date`, `object`, `map`, `set`, `bigint`
+
+Return `misc` (for any other types not covered above):
+
+function, symbol, error, weakmap, weakset, etc.
+
 
 ### License
 This library is under AGPL v3 Licensed. (It is same as the license of Mustom)
 
 ### Git Repository
-[GitHub] (https://github.com/mustom/ihatecarrot)
+[GitHub] (https://github.com/mustom/mustom-validator)
 
 ### Mustom Project Website
 [MUSTOM HQ] (https://mustom.com/)

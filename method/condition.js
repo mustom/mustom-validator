@@ -1,13 +1,7 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const {
-    BaseError, 
-    DataTypeError, 
-    EmptyArgumentError,
-    UsageError
-} = require('../error/custom-error')
-const { errorHandler } = require('../util/error-handler.js')
+const { errorHandler } = require('../util/error-handler')
 
 const condition = {
     /**
@@ -18,7 +12,7 @@ const condition = {
         if (this.input === undefined) {
             errorHandler(
                 this,
-                'missing-required',
+                'ValidationError',
                 `The value '${this.input}' is required.`
             )
         }
@@ -31,23 +25,23 @@ const condition = {
      */
     notEmpty: function () {
         if (this.input === null || this.input === '' || this.input === undefined) {
-            errorHandler(this, 'DataTypeError', `The value is empty.`)
+            errorHandler(this, 'ValidationError', `The value is empty.`)
         }
 
         if (this.dataType === 'array' && !this.input.length) {
-            errorHandler(this, 'DataTypeError', `The value of array is empty.`)
+            errorHandler(this, 'ValidationError', `The value of array is empty.`)
         }
 
         if (this.dataType === 'object' && !Object.keys(this.input).length) {
-            errorHandler(this, 'DataTypeError', `The value of object is empty.`)
+            errorHandler(this, 'ValidationError', `The value of object is empty.`)
         }
 
         if (this.dataType === 'map' && !this.input.size) {
-            errorHandler(this, 'DataTypeError', `The value of map is empty.`)
+            errorHandler(this, 'ValidationError', `The value of map is empty.`)
         }
 
         if (this.dataType === 'set' && !this.input.size) {
-            errorHandler(this, 'DataTypeError', `The value of set is empty.`)
+            errorHandler(this, 'ValidationError', `The value of set is empty.`)
         }
 
         return this
@@ -57,7 +51,7 @@ const condition = {
      * It only works when the data type is 'string'.
      */
     noWhitespace: function () {
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -69,7 +63,7 @@ const condition = {
         const isPassed = regex.test(this.input)
 
         if (isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should not contain whitespace.`)
+            errorHandler(this, 'ValidationError', `The value '${this.input}' should not contain whitespace.`)
         }
 
         return this
@@ -79,17 +73,18 @@ const condition = {
      * It only works when the data type is 'array'.
      */
     notDuplicate: function () {
-        if (this.dataType !== 'array') {
-            errorHandler(this, 'UsageError', `'notDuplicate' method is only available for array type.`)
-        }
-
-        if (this.input === null || this.input === undefined) {
+        if (this.input === undefined) {
             return this
         }
 
+        if (this.dataType !== 'array') {
+            errorHandler(this, 'ValidationError', `'notDuplicate' method is only available for array type.`)
+        }
+
         const uniqueItems = new Set(this.input)
+        
         if (uniqueItems.size !== this.input.length) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' has duplicate items.`)
+            errorHandler(this, 'ValidationError', `The value has duplicate items.`)
         }
 
         return this

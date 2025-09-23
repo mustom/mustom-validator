@@ -7,37 +7,33 @@ const dataType = require('./method/data-type.js')
 const regex = require('./method/regex.js')
 const dataTransformation = require('./method/data-transformation.js')
 const misc = require('./method/misc.js')
-const errorHandler = require('./util/error-handler.js')
+const { errorHandler } = require('./util/error-handler.js')
 const { dataTypeChecker } = require('./util/data-type-checker.js')
 const {
     BaseError, 
-    DataTypeError, 
-    EmptyArgumentError,
+    ValidationError, 
     UsageError
 } = require('./error/custom-error')
 
 
-// TODO : typeof aa === 'object' && aa !== null && !Array.isArray(aa) 가 객체를 판별하는 가장 이상적인 방법이라고 한다.
-// 특히 Date 등은 typeof로 판별이 안되기 때문에 주의해야 한다고 함.
-
 const validator = function () {
     this.input = null
     this.refinement = null
-    // this.dataType = []
     this.dataType = null
     this.errors = []
     this.isValid = true
     this.option = {
         itemValidationMode: 'all', // all(전부 조건), some (하나라도 조건), none, one, any
         entryValidationMode: 'strict',
-        stripUnknown: 'true',
+        stripUnknown: true,
         softFail: false,
-        ignoreUsageError: true
+        ignoreUsageError: true,
+        abortEarly: false, // Stop validation on first error
+        strictDateValidation: false, // Strict date validation (e.g., invalid dates like Feb 30)
     }
 
     // item : Used for indexed data structure (Array, Set)
     // entry : Userd for Key-value based data structure (Object, Map)
-
     return this
 }
 
@@ -51,32 +47,20 @@ validator.prototype.single = function (input, option = {}) {
 }
 
 validator.prototype.objectIterate = function (input, rule, option = {}) {
-    if (!input || !Object.keys(rule).length) {
-        throw new EmptyArgumentError(
-            'EmptyArgumentError',
-            `The input value is required.`
-        )
+    if (!input || !Object.keys(input).length) {
+        errorHandler(this, 'UsageError', `The input value is required.`)
     }
 
     if (!rule || !Object.keys(rule).length) {
-        throw new EmptyArgumentError(
-            'EmptyArgumentError',
-            `Rule is required.`
-        )
+        errorHandler(this, 'UsageError', `Rule is required.`)
     }
 
     if (input.constructor !== Object) {
-        throw new EmptyArgumentError(
-            'invalid-type',
-            `'objectIterate' method requires an object.`
-        )
+        errorHandler(this, 'UsageError', `'objectIterate' method requires an object.`)
     }
 
     if (rule.constructor !== Object) {
-        throw new EmptyArgumentError(
-            'EmptyArgumentError',
-            `'objectIterate' method requires an object.`
-        )
+        errorHandler(this, 'UsageError', `'objectIterate' method requires an object.`)
     }
 
     this.input = input
@@ -88,13 +72,7 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
 
         // Throw error if the key is not defined in the rule
         if (mode === 'strict' && !targetRule) {
-            if (this.option.softFail) {
-                this.errors.push(new UsageError('undefined-key', `Key '${key}' is undefined.`))
-                this.isValid = false
-                continue
-            }
-
-            throw new DataTypeError('undefined-key', `Key '${key}' is undefined.`)
+            errorHandler(this, 'ValidationError', `Key '${key}' is undefined.`)
         }
 
         // If the key is not defined in the rule, and the option 'stripUnknown' is true, remove it from refinement
@@ -113,7 +91,7 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
 
     for (const key in rule) {
         if (!target[key]) {
-            throw new DataTypeError('missing-required', `The value '${key}' is required.`)
+            errorHandler(this, 'ValidationError', `The value '${key}' is required.`)
         }
     }
 
@@ -123,10 +101,7 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
 
 validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
     if (!Array.isArray(value)) {
-        throw new DataTypeError(
-            'invalid-type',
-            `The value '${this.input}' should be an array.`
-        )
+        errorHandler(this, 'UsageError', `The input value should be an array.`)
     }
 
     for (const item of value) {
@@ -144,24 +119,15 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
     this.dataType = dataTypeChecker(input)
 
     if (this.dataType !== 'array' || !input.length) {
-        throw new DataTypeError(
-            'invalid-type',
-            `The value '${this.input}' should be an array and not empty.`
-        )
+        errorHandler(this, 'ValidationError', `The value '${this.input}' should be an array and not empty.`)
     }
 
     if (!rule || typeof rule !== 'function') {
-        throw new EmptyArgumentError(
-            'EmptyArgumentError',
-            `Rule is required.`
-        )
+        errorHandler(this, 'UsageError', `Rule is required.`)
     }
 
     if (typeof option !== 'object') {
-        throw new EmptyArgumentError(
-            'EmptyArgumentError',
-            `Option should be an object.`
-        )
+        errorHandler(this, 'UsageError', `Option should be an object.`)
     }
 
     this.input = input
@@ -178,10 +144,20 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
 }
 
 validator.prototype.setIterate = function () {
+    this.dataType = dataTypeChecker(input)
+
+    if (this.dataType !== 'set' || !input.size) {
+        errorHandler(this, 'ValidationError', `The value '${this.input}' should be a set and not empty.`)
+    }
     
 }
 
 validator.prototype.mapIterate = function () {
+    this.dataType = dataTypeChecker(input)
+
+    if (this.dataType !== 'map' || !input.size) {
+        errorHandler(this, 'ValidationError', `The value '${this.input}' should be a map and not empty.`)
+    }
 
 }
 

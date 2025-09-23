@@ -3,8 +3,7 @@
 
 const {
     BaseError,
-    DataTypeError,
-    EmptyArgumentError,
+    ValidationError,
     UsageError
 } = require('../error/custom-error')
 
@@ -21,10 +20,8 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
     }
 
     switch (errorCode) {
-        case 'DataTypeError':
-            throw new DataTypeError(errorCode, errorMessage)
-        case 'EmptyArgumentError':
-            throw new EmptyArgumentError(errorCode, errorMessage)
+        case 'ValidationError':
+            throw new ValidationError(errorCode, errorMessage)
         case 'UsageError':
             if (thisObject.ignoreUsageError) {
                 thisObject.isValid = false

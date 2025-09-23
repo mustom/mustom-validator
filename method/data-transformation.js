@@ -1,15 +1,7 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const {
-    BaseError, 
-    DataTypeError, 
-    EmptyArgumentError,
-    UsageError
-} = require('../error/custom-error')
-
-const errorHandler = require('../util/error-handler.js')
-
+const { errorHandler } = require('../util/error-handler')
 
 const dataTransformation = {
     /**

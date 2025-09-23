@@ -26,17 +26,10 @@ class BaseError extends Error {
         }
     }
 }
-class DataTypeError extends BaseError {
+class ValidationError extends BaseError {
     constructor(code, message, options = {}) {
         super(code, message, options)
-        this.name = 'DataTypeError'
-    }
-}
-
-class EmptyArgumentError extends BaseError {
-    constructor(code, message, options = {}) {
-        super(code, message, options)
-        this.name = 'EmptyArgumentError'
+        this.name = 'ValidationError'
     }
 }
 
@@ -49,7 +42,6 @@ class UsageError extends BaseError {
 
 module.exports = { 
     BaseError, 
-    DataTypeError, 
-    EmptyArgumentError,
+    ValidationError, 
     UsageError
  }

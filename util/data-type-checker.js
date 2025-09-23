@@ -1,10 +1,15 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
+
+// This function checks the data type of the input value and returns it as a string.
+// 1. Return values will be one of the following:
+//    'null', 'string', 'boolean', 'number', 'undefined', 'nan', 'array', 'regexp', 'date', 'object', 'map', 'set', 'bigint'
+// 2. Return 'misc' (for any other types not covered above):
+//    'function', 'symbol', 'error', 'weakmap', 'weakset', etc.
+
 const dataTypeChecker = input => {
-    if (input === null) {
-        return 'null'
-    }
+    if (input === null) { return 'null' }
 
     const type = typeof input
 
@@ -14,6 +19,7 @@ const dataTypeChecker = input => {
         if (type === 'number' && isNaN(input)) {
             return 'nan'
         }
+
         return type
     }
 
@@ -23,14 +29,9 @@ const dataTypeChecker = input => {
     if ([ 'array', 'regexp', 'date', 'object', 'map', 'set', 'bigint' ].includes(secondNature)) {
         return secondNature
     }
-
+    
     return 'misc'
-
-    // Return values will be one of the following:
-    // 'null', 'string', 'boolean', 'number', 'undefined', 'nan', 'array', 'regexp', 'date', 'object', 'map', 'set', 'bigint'
-
-    // Return 'misc' (for any other types not covered above):
-    // 'function', 'symbol', 'error', 'weakmap', 'weakset', etc.
 }
+
 
 module.exports = { dataTypeChecker }

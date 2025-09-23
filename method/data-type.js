@@ -1,42 +1,49 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const {
-    BaseError, 
-    DataTypeError, 
-    EmptyArgumentError,
-    UsageError
-} = require('../error/custom-error')
 
-const { errorHandler } = require('../util/error-handler.js')
+const { errorHandler } = require('../util/error-handler')
 
 const dataType = {
     object: function () {
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (this.input.constructor !== Object) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be an object.`)
+            errorHandler(this, 'ValidationError', `The value should be an object.`)
         }
 
         return this
     },
     arrayOfObject: function () {
-        return this
-    },
-    array: function (rule = 'all') {
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (!Array.isArray(this.input)) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be an array.`)
+            errorHandler(this, 'ValidationError', `The value 'should be an array of objects.`)
+        }
+
+        for (const item of this.input) {
+            if (item.constructor !== Object) {
+                errorHandler(this, 'ValidationError', `The value should be an array of objects.`)
+            }
         }
 
         return this
     },
+    array: function (rule = 'all') {
+        if (this.input === undefined) {
+            return this
+        }
 
+        if (!Array.isArray(this.input)) {
+            errorHandler(this, 'ValidationError', `The value should be an array.`)
+        }
+
+        return this
+    },
     /**
      * Validate the value is a string. If the value is null, undefined or empty string, it will be ignored.
      * @example
@@ -45,19 +52,17 @@ const dataType = {
      * validator.single(true).string() // Throws an error
      */
     string: function () {
-        console.log(this.input)
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (typeof this.input !== 'string') {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a string.`)
+            errorHandler(this, 'ValidationError', `The value should be a string.`)
         }
 
         return this
     },
-
     /**
      * Validate the value is a boolean. If the value is null, undefined or empty string, it will be ignored.
      * @example
@@ -66,13 +71,12 @@ const dataType = {
      * validator.single('true').boolean() // Throws an error
      */
     boolean: function () {
-
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (typeof this.input !== 'boolean') {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a boolean.`)
+            errorHandler(this, 'ValidationError', `The value should be a boolean.`)
         }
 
         return this
@@ -87,32 +91,31 @@ const dataType = {
      * validator.single('mustom').number() // Throws an error
      */
     number: function () {
+        if (this.input === undefined) {
+            return this
+        }
 
         if (['array'].includes(this.dataType)) {
             for (const item of this.input) {
                 if (isNaN(item)) {
-                    errorHandler(this, 'DataTypeError', `The value '${item}' should be a number.`)
+                    errorHandler(this, 'ValidationError', `The value should be a number.`)
                 }
             }
             // Empty array is allowed. If you want to check the empty array, use 'notEmpty' method.
             return this
         }
 
-        if (this.input === null || this.input === undefined || this.input === '') {
-            return this
-        }
 
         if (isNaN(this.input)) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a number.`
+                'ValidationError',
+                `The value should be a number.`
             )
         }
 
         return this
     },
-
     /**
      * Validate the value is a non-negative number. It can be a fraction or zero.
      * Allowed : 0, 1, 2, 3, 1.1, 2.2, 3.3, ...
@@ -124,15 +127,15 @@ const dataType = {
      */
     nonNegativeNumber: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (isNaN(this.input) || this.input < 0) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a non-negative number.`
+                'ValidationError',
+                `The value should be a non-negative number.`
             )
         }
 
@@ -150,15 +153,15 @@ const dataType = {
      */
     positiveNumber: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (isNaN(this.input) || this.input <= 0) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a positive number.`
+                'ValidationError',
+                `The value should be a positive number.`
             )
         }
 
@@ -176,15 +179,15 @@ const dataType = {
      */
     naturalNumber: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (this.input % 1 !== 0 || this.input <= 0 || isNaN(this.input)) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a natural number.`
+                'ValidationError',
+                `The value should be a natural number.`
             )
         }
 
@@ -202,15 +205,15 @@ const dataType = {
      */
     wholeNumber: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (this.input % 1 !== 0 || !this.input < 0 || isNaN(this.input)) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a whole number.`
+                'ValidationError',
+                `The value should be a whole number.`
             )
         }
 
@@ -227,17 +230,16 @@ const dataType = {
      * validator.single(1.1).integer() // Throws an error
      */
     integer: function () {
-        this.dataType = [...this.dataType, 'integer']
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (this.input % 1 !== 0 || isNaN(this.input)) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be an integer.`
+                'ValidationError',
+                `The value should be an integer.`
             )
         }
 
@@ -255,15 +257,15 @@ const dataType = {
      */
     negativeInteger: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (this.input % 1 !== 0 || !this.input >= 0 || isNaN(this.input)) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a negative integer.`
+                'ValidationError',
+                `The value should be a negative integer.`
             )
         }
 
@@ -278,7 +280,7 @@ const dataType = {
      */
     email: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -288,7 +290,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a correct email format.`)
+            errorHandler(this, 'ValidationError', `The value should be a correct email format.`)
         }
 
         return this
@@ -304,14 +306,14 @@ const dataType = {
      */
     url: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         const regex = /^http[s]?:\/\//
         const isPassed = regex.test(this.input)
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid URL format.`)
+            errorHandler(this, 'ValidationError', `The value should be a valid URL format.`)
         }
 
         return this
@@ -327,7 +329,7 @@ const dataType = {
      */
     ip: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -336,7 +338,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid IP format.`)
+            errorHandler(this, 'ValidationError', `The value should be a valid IP format.`)
         }
 
         return this
@@ -354,15 +356,15 @@ const dataType = {
 
     code: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
         if (this.input.length < 50) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be less than 50 characters.`
+                'ValidationError',
+                `The value should be less than 50 characters.`
             )
         }
 
@@ -371,8 +373,8 @@ const dataType = {
         if (!isPassed) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' shoude be start with alphabet, and should be contain only number, alphabet, underscore, and hyphen.`
+                'ValidationError',
+                `The value should be start with alphabet, and should be contain only number, alphabet, underscore, and hyphen.`
             )
         }
 
@@ -382,7 +384,7 @@ const dataType = {
     // Example : 'privacy_policy_02'
     path: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -392,8 +394,8 @@ const dataType = {
         if (!isPassed) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be contain only number, alphabet, underscore, and hyphen.`
+                'ValidationError',
+                `The value should be contain only number, alphabet, underscore, and hyphen.`
             )
         }
 
@@ -410,8 +412,7 @@ const dataType = {
      * validator.single('mus/tom').code() // Throws an error
      */
     injectionSafeString: function () {
-
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -421,14 +422,13 @@ const dataType = {
         if (!isPassed) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be contain only number, alphabet, underscore, dot, at sign, and hyphen.`
+                'ValidationError',
+                `The value should be contain only number, alphabet, underscore, dot, at sign, and hyphen.`
             )
         }
 
         return this
     },
-
     /**
      * Validate the value is an alphabet.
      * It should be contain only alphabet characters (A-Z, a-z).
@@ -440,7 +440,7 @@ const dataType = {
      */
     alphabet: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -448,12 +448,11 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be an alphabet.`)
+            errorHandler(this, 'ValidationError', `The value should be an alphabet.`)
         }
 
         return this
     },
-
     /**
      * Validate the value is a capital letter.
      * It should be contain only capital letters (A-Z).
@@ -465,7 +464,7 @@ const dataType = {
      */
     uppercase: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -473,12 +472,11 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a capital letter.`)
+            errorHandler(this, 'ValidationError', `The value should be a capital letter.`)
         }
 
         return this
     },
-
     /**
      * Validate the value is a lowercase letter.
      * It should be contain only lowercase letters (a-z).
@@ -489,8 +487,7 @@ const dataType = {
      * validator.single('mustom@').lowercase() // Throws an error
      */
     lowercase: function () {
-
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -498,7 +495,7 @@ const dataType = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a lowercase.`)
+            errorHandler(this, 'ValidationError', `The value should be a lowercase.`)
         }
 
         return this
@@ -515,7 +512,7 @@ const dataType = {
      */
     alphaNumeric: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -525,31 +522,38 @@ const dataType = {
         if (!isPassed) {
             errorHandler(
                 this,
-                'DataTypeError',
-                `The value '${this.input}' should be a number and alphabet.`
+                'ValidationError',
+                `The value should be contain only number and alphabet.`
             )
         }
 
         return this
     },
-
+    /**
+     * Validate the value is a valid password format. (Used in Mustom Admin)
+     * It should be minimum eight characters, maximum twenty characters, at least one letter, one number and one special character.
+     * If the value is null, undefined or empty string, it will be ignored.
+     * @example
+     * validator.single('Password1!').password() // Passes
+     * validator.single('Pass1!').password() // Throws an error
+     * validator.single('Password!').password() // Throws an error
+     * validator.single('Password1').password() // Throws an error
+     */
     password: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
-        // Minimum eight characters, at least one letter, one number and one special character
-        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid password format.`)
+            errorHandler(this, 'ValidationError', `The value should be a valid password format.`)
         }
 
         return this
     },
-
     /**
      * Validate the value is an image file format.
      * It should be end with one of the following extensions: jpg, jpeg, png, gif, bmp, tiff, tif, svg, webp.
@@ -562,7 +566,7 @@ const dataType = {
      */
     imageFile: function () {
 
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
         }
 
@@ -572,7 +576,7 @@ const dataType = {
             for (const item of this.input) {
                 const valueToLowerCase = item.toLowerCase()
                 if (!regex.test(valueToLowerCase)) {
-                    errorHandler(this, 'DataTypeError', `The value '${item}' should be a valid image file format.`)
+                    errorHandler(this, 'ValidationError', `The value should be a valid image file format.`)
                 }
             }
 
@@ -582,25 +586,116 @@ const dataType = {
         const valueToLowerCase = this.input.toLowerCase()
         const isPassed = regex.test(valueToLowerCase)
         if (!isPassed) {
-            errorHandler(this, 'DataTypeError', `The value '${this.input}' should be a valid image file format.`)
+            errorHandler(this, 'ValidationError', `The value should be a valid image file format.`)
         }
 
         return this
     },
-
+    /**
+     * Validate the value is a valid date time format.
+     * It can be in various formats including common date/time format and ISO 8601 formats.
+     * @example
+     * validator.single('2023-01-05 09:05:02').dateTime() // Passes
+     * validator.single('2023-01-05T09:05:02Z').dateTime() // Passes
+     * validator.single('2023-01-05').dateTime() // Throws an error
+     * validator.single('09:05:02').dateTime() // Throws an error
+     */
     dateTime: function () {
-
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
+        }
+        
+        if (typeof this.input !== 'string') {
+            errorHandler(this, 'ValidationError', `The value should be a string for datetime validation.`)
+            return this
+        }
+        
+        // Define multiple valid datetime patterns FIRST
+        const validPatterns = [
+            // Common date/time format (YYYY-MM-DD HH:mm:ss)
+            /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+            
+            // ISO 8601 formats
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/,                      // YYYY-MM-DDTHH:mm:ss
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,3}$/,             // YYYY-MM-DDTHH:mm:ss.s/ss/sss
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,                     // YYYY-MM-DDTHH:mm:ssZ
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,3}Z$/,            // YYYY-MM-DDTHH:mm:ss.s/ss/sssZ
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/,       // YYYY-MM-DDTHH:mm:ss+HH:mm
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,3}[+-]\d{2}:\d{2}$/, // YYYY-MM-DDTHH:mm:ss.s/ss/sss+HH:mm
+            
+            // Additional common formats
+            /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2}$/,                // Single digit month/day/hour (e.g. 2023-1-5 9:05:02)
+            /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{1,3}$/,             // With milliseconds space separator (e.g. 2023-01-05 09:05:02.123)
+            /^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/,                    // Forward slashes (e.g. 2023/01/05 09:05:02)
+            /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/,                    // MM/DD/YYYY format (e.g. 01/05/2023 09:05:02)
+            /^\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}$/                       // DD-MM-YYYY format (e.g. 05-01-2023 09:05:02)
+        ]
+
+        const isValidFormat = validPatterns.some(pattern => pattern.test(this.input))
+        
+        if (!isValidFormat) {
+            errorHandler(this, 'ValidationError', `The value should be a valid date time format.`)
+            return this
+        }
+
+        // Validate if it creates a valid date (less restrictive but catches logical errors)
+        const date = new Date(this.input)
+        if (isNaN(date.getTime())) {
+            errorHandler(this, 'ValidationError', `The value should be a valid date time.`)
+            return this
+        }
+
+        // Additional logical validation if strictDateValidation option is enabled
+        if (this.option.strictDateValidation) {
+            const isoMatch = this.input.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/)
+    
+            if (isoMatch) {
+                const year = parseInt(isoMatch[1])
+                const month = parseInt(isoMatch[2])
+                const day = parseInt(isoMatch[3])
+                
+                // Basic range validation
+                if (month < 1 || month > 12) {
+                    errorHandler(this, 'ValidationError', `The month '${month}' should be between 1 and 12.`)
+                    return this
+                }
+                
+                if (day < 1 || day > 31) {
+                    errorHandler(this, 'ValidationError', `The day '${day}' should be between 1 and 31.`)
+                    return this
+                }
+    
+                // Check if the constructed date matches input (prevents Feb 30, etc.)
+                const testDate = new Date(year, month - 1, day)
+                if (testDate.getFullYear() !== year || 
+                    testDate.getMonth() !== month - 1 || 
+                    testDate.getDate() !== day) {
+                    errorHandler(this, 'ValidationError', `The date '${year}-${month}-${day}' is not a valid date.`)
+                    return this
+                }
+            }
         }
 
         return this
     },
-
+    /**
+     * Validate the value is a valid ISO 8601 date format (YYYY-MM-DD).
+     * @example
+     * validator.single('2023-01-05').dateOnly() // Passes
+     * validator.single('2023-1-5').dateOnly() // Throws an error
+     * validator.single('2023/01/05').dateOnly() // Throws an error
+     * validator.single('05-01-2023').dateOnly() // Throws an error
+     */
     dateOnly: function () {
-
-        if (this.input === null || this.input === undefined || this.input === '') {
+        if (this.input === undefined) {
             return this
+        }
+        
+        const regex = /^\d{4}-\d{2}-\d{2}$/
+        const isPassed = regex.test(this.input)
+
+        if (!isPassed) {
+            errorHandler(this, 'ValidationError', `The value should be a valid date format.`)
         }
 
         return this
