@@ -5,6 +5,10 @@ const { errorHandler } = require('../util/error-handler')
 
 
 const comparison = {
+    /**
+     * Checks if the input is equal to the expected value.
+     * @param {*} expected - The expected value.
+     */
     is: function (expected) {
         if (this.input === undefined) {
             return this
@@ -16,6 +20,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the input is not equal to the expected value.
+     * @param {*} expected - The expected value.
+     */
     isNot: function (expected) {
         if (this.input === undefined) {
             return this
@@ -27,6 +35,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the input is greater than or equal to the limit.
+     * @param {number} limit - The minimum value.
+     */
     minValue: function (limit) {
         if (this.input === undefined) {
             return this
@@ -46,6 +58,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the input is less than or equal to the limit.
+     * @param {number} limit - The maximum value.
+     */
     maxValue: function (limit) {
         if (this.input === undefined) {
             return this
@@ -65,6 +81,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the input is included in the comparison array.
+     * @param {Array} comparison - The array to compare against.
+     */
     in: function (comparison) {
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(comparison)) {
@@ -85,6 +105,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the input is not included in the comparison array.
+     * @param {Array} comparison - The array to compare against.
+     */
     notIn: function (comparison) {
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(comparison)) {
@@ -105,6 +129,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the length of the input is exactly equal to the expected length.
+     * @param {number} expected - The expected length.
+     */
     exactLength: function (expected) {
         if (this.input === undefined) {
             return this
@@ -122,6 +150,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the length of the input is greater than or equal to the expected length.
+     * @param {number} expected - The expected minimum length.
+     */
     minLength: function (expected) {
         if (this.input === undefined) {
             return this
@@ -139,6 +171,10 @@ const comparison = {
 
         return this
     },
+    /**
+     * Checks if the length of the input is less than or equal to the expected length.
+     * @param {number} expected - The expected maximum length.
+     */
     maxLength: function (expected) {
         if (this.input === undefined) {
             return this

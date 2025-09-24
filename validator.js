@@ -9,11 +9,6 @@ const dataTransformation = require('./method/data-transformation.js')
 const misc = require('./method/misc.js')
 const { errorHandler } = require('./util/error-handler.js')
 const { dataTypeChecker } = require('./util/data-type-checker.js')
-const {
-    BaseError, 
-    ValidationError, 
-    UsageError
-} = require('./error/custom-error')
 
 
 const validator = function () {
@@ -47,25 +42,38 @@ validator.prototype.single = function (input, option = {}) {
 }
 
 validator.prototype.objectIterate = function (input, rule, option = {}) {
-    if (!input || !Object.keys(input).length) {
+
+    const inputDataType = dataTypeChecker(input)
+    const ruleDataType = dataTypeChecker(rule)
+
+    if (!input) {
         errorHandler(this, 'UsageError', `The input value is required.`)
     }
 
-    if (!rule || !Object.keys(rule).length) {
+    if (!rule) {
         errorHandler(this, 'UsageError', `Rule is required.`)
     }
 
-    if (input.constructor !== Object) {
+    if (inputDataType !== 'object') {
         errorHandler(this, 'UsageError', `'objectIterate' method requires an object.`)
     }
 
-    if (rule.constructor !== Object) {
+    if (ruleDataType !== 'object') {
         errorHandler(this, 'UsageError', `'objectIterate' method requires an object.`)
+    }
+
+    if (!Object.keys(input).length) {
+        errorHandler(this, 'UsageError', `The input object should not be empty.`)
+    }
+
+    if (!Object.keys(rule).length) {
+        errorHandler(this, 'UsageError', `The rule object should not be empty.`)
     }
 
     this.input = input
     this.refinement = input
     this.option = { ...this.option, ...option }
+    this.dataType = 'object'
 
     for (const key in input) {
         const targetRule = rule[key]
@@ -100,11 +108,40 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
 }
 
 validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
-    if (!Array.isArray(value)) {
-        errorHandler(this, 'UsageError', `The input value should be an array.`)
+
+    const inputDataType = dataTypeChecker(input)
+    const ruleDataType = dataTypeChecker(rule)
+
+    if (!input) {
+        errorHandler(this, 'UsageError', `The input value is required.`)
     }
 
-    for (const item of value) {
+    if (!rule) {
+        errorHandler(this, 'UsageError', `Rule is required.`)
+    }
+
+    if (inputDataType !== 'array') {
+        errorHandler(this, 'UsageError', `'arrayObjectIterate' method requires an array.`)
+    }
+    
+    if (ruleDataType !== 'object') {
+        errorHandler(this, 'UsageError', `'arrayObjectIterate' method requires an object as a rule.`)
+    }
+
+    if (!input.length) {
+        errorHandler(this, 'UsageError', `The input array should not be empty.`)
+    }
+
+    if (!Object.keys(rule).length) {
+        errorHandler(this, 'UsageError', `The rule object should not be empty.`)
+    }
+
+    this.input = input
+    this.refinement = input
+    this.option = { ...this.option, ...option }
+    this.dataType = 'arrayObject'
+
+    for (const item of input) {
         this.objectIterate(item, rule, this.option)
     }
 
@@ -116,29 +153,100 @@ validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
 
 validator.prototype.arrayIterate = function (input, rule, option = {}) {
 
-    this.dataType = dataTypeChecker(input)
+    const inputDataType = dataTypeChecker(input)
+    const ruleDataType = dataTypeChecker(rule)
 
-    if (this.dataType !== 'array' || !input.length) {
-        errorHandler(this, 'ValidationError', `The value '${this.input}' should be an array and not empty.`)
+    if (!input) {
+        errorHandler(this, 'UsageError', `The input value is required.`)
     }
-
-    if (!rule || typeof rule !== 'function') {
+    
+    if (!rule) {
         errorHandler(this, 'UsageError', `Rule is required.`)
+    }    
+
+    if (inputDataType !== 'array') {
+        errorHandler(this, 'UsageError', `'arrayIterate' method requires an array.`)
     }
 
-    if (typeof option !== 'object') {
-        errorHandler(this, 'UsageError', `Option should be an object.`)
+    if (ruleDataType !== 'function') {
+        errorHandler(this, 'UsageError', `'arrayIterate' method requires a function as a rule.`)
+    }
+
+    if (!input.length) {
+        errorHandler(this, 'UsageError', `The input array should not be empty.`)
     }
 
     this.input = input
     this.refinement = input
     this.option = { ...this.option, ...option }
+    this.dataType = 'array'
 
-    // const results = input.map((item) => {
-    //     const v = new validator()
-    //     rule.call(v, item)
-    //     return v
-    // })
+    // 아래는 GTP가 한거다 믿지 말자
+
+    const results = input.map((item) => {
+        this.input = item
+        const prevRefinement = this.refinement
+        this.refinement = item
+        rule()
+        const result = {
+            isValid: this.isValid,
+            errors: this.errors,
+            refinement: this.refinement
+        }
+        this.isValid = true
+        this.errors = []
+        this.refinement = prevRefinement
+        return result
+    })
+
+    const validItems = results.filter(result => result.isValid).map(result => result.refinement)
+    const invalidItems = results.filter(result => !result.isValid)
+
+    switch (this.option.itemValidationMode) {
+        case 'all':
+            if (invalidItems.length) {
+                this.isValid = false
+                this.errors = invalidItems.flatMap(item => item.errors)
+                if (this.option.abortEarly && this.errors.length) return this
+            }
+            this.refinement = validItems
+            break
+        case 'some':
+            if (validItems.length === 0) {
+                this.isValid = false
+                this.errors = invalidItems.flatMap(item => item.errors)
+                if (this.option.abortEarly && this.errors.length) return this
+            }
+            this.refinement = validItems
+            break
+        case 'none':
+            if (invalidItems.length === 0) {
+                this.isValid = false
+                this.errors.push({ type: 'itemValidationMode', message: 'No items should pass the validation.' })
+                if (this.option.abortEarly && this.errors.length) return this
+            }
+            this.refinement = []
+            break
+        case 'one':
+            if (validItems.length !== 1) {
+                this.isValid = false
+                this.errors.push({ type: 'itemValidationMode', message: 'Exactly one item should pass the validation.' })
+                if (this.option.abortEarly && this.errors.length) return this
+            }
+            this.refinement = validItems
+            break
+        case 'any':
+            if (validItems.length === 0) {
+                this.isValid = false
+                this.errors = invalidItems.flatMap(item => item.errors)
+                if (this.option.abortEarly && this.errors.length) return this
+            }
+            this.refinement = validItems
+            break
+        default:
+            errorHandler(this, 'UsageError', `Invalid itemValidationMode: ${this.option.itemValidationMode}`)
+    }
+
 
     return this
 }

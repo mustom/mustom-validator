@@ -8,7 +8,8 @@
 // 2. Return 'misc' (for any other types not covered above):
 //    'function', 'symbol', 'error', 'weakmap', 'weakset', etc.
 
-const dataTypeChecker = input => {
+const dataTypeChecker = (input, option = {}) => {
+
     if (input === null) { return 'null' }
 
     const type = typeof input
@@ -29,7 +30,12 @@ const dataTypeChecker = input => {
     if ([ 'array', 'regexp', 'date', 'object', 'map', 'set', 'bigint' ].includes(secondNature)) {
         return secondNature
     }
-    
+
+    if (option.showMisc) {
+        return secondNature
+    }
+
+    // For any other types not covered above, return 'misc'.
     return 'misc'
 }
 

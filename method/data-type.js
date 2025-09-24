@@ -5,6 +5,12 @@
 const { errorHandler } = require('../util/error-handler')
 
 const dataType = {
+    /**
+     * Checks if the input is an object.
+     * @example
+     * validator.single({ key: 'value' }).object() // Passes
+     * validator.single([1, 2, 3]).object() // Throws an error
+     */
     object: function () {
         if (this.input === undefined) {
             return this
@@ -16,6 +22,12 @@ const dataType = {
 
         return this
     },
+    /**
+     * Checks if the input is an array of objects.
+     * @example
+     * validator.single([{ key: 'value' }]).arrayOfObject() // Passes
+     * validator.single([1, 2, 3]).arrayOfObject() // Throws an error
+     */
     arrayOfObject: function () {
         if (this.input === undefined) {
             return this
@@ -33,6 +45,12 @@ const dataType = {
 
         return this
     },
+    /**
+     * Validate the value is an array.
+     * @example
+     * validator.single([1, 2, 3]).array() // Passes
+     * validator.single('hello').array() // Throws an error
+     */
     array: function (rule = 'all') {
         if (this.input === undefined) {
             return this
@@ -81,7 +99,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a number. If the value is null, undefined or empty string, it will be ignored.
      * @example
@@ -141,7 +158,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a positive number which is not negative and not zero. It can be a fraction.
      * Allowed : 1, 2, 3, 1.1, 2.2, 3.3, ...
@@ -167,7 +183,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a natural number which is not negative and not a fraction, and not zero.
      * Allowed : 1, 2, 3, 4, 5, ...
@@ -193,7 +208,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a whole number which is not negative and not a fraction.
      * Allowed : 0, 1, 2, 3, 4, 5, ...
@@ -219,7 +233,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is an integer. It can be a negative number, zero or positive number.
      * Allowed : -3, -2, -1, 0, 1, 2, 3, ...
@@ -245,7 +258,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a negative integer which is not a fraction, and less than zero.
      * Allowed : -3, -2, -1
@@ -271,9 +283,8 @@ const dataType = {
 
         return this
     },
-
     /**
-     * Validate the value is an email format. If the value is null, undefined or empty string, it will be ignored.
+     * Validate the value is a valid email format.
      * @example
      * validator.single('mustom@email.com').email() // Passes
      * validator.single('mustom').email() // Throws an error
@@ -295,7 +306,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a URL format. It should be start with http:// or https://.
      * @example
@@ -318,7 +328,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a IP format. It should be IPv4 or IPv6.
      * @example
@@ -343,7 +352,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is a code format that is used in Mustom.
      * It should be start with alphabet and contain only number, alphabet, underscore, and hyphen.
@@ -353,7 +361,6 @@ const dataType = {
      * validator.single('mustom@123').code() // Throws an error
      * validator.single('123-mustom').code() // Throws an error
      */
-
     code: function () {
 
         if (this.input === undefined) {
@@ -380,8 +387,15 @@ const dataType = {
 
         return this
     },
-
-    // Example : 'privacy_policy_02'
+    /**
+     * Validate the value is a path format that is used in Mustom.
+     * It should be contain only number, alphabet, underscore, and hyphen.
+     * Max length is 50 characters.
+     * @example
+     * validator.single('mustom-123').path() // Passes
+     * validator.single('mustom@123').path() // Throws an error
+     * validator.single('mustom/123').path() // Throws an error
+     */
     path: function () {
 
         if (this.input === undefined) {
@@ -401,7 +415,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is an injection safe string.
      * It should be contain only number, alphabet, underscore, dot, 골뱅이 and hyphen.
@@ -500,7 +513,6 @@ const dataType = {
 
         return this
     },
-
     /**
      * Validate the value is an alphanumeric string.
      * It should be contain only number and alphabet characters (A-Z, a-z, 0-9).

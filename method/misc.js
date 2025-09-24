@@ -5,6 +5,10 @@ const { errorHandler } = require('../util/error-handler')
 const { dataTypeChecker } = require('../util/data-type-checker')
 
 const misc = {
+    /**
+     * Validates grid options for data retrieval.
+     * It used to validate Mustom admin panel grid options.
+     */
     gridOption: function () {
         if (dataTypeChecker(this.input) !== 'object') {
             errorHandler(this, 'ValidationError', 'The input for gridOption() must be an object.')

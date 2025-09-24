@@ -3,6 +3,7 @@
 
 class BaseError extends Error {
     constructor(code, message, options = {}) {
+        
         super(message)        
 
         if (Error.captureStackTrace) {
