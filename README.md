@@ -7,12 +7,12 @@ This library was made specifically for the Mustom e-commerce platform. Because i
 
 ### Installation
 Install via NPM
+
 ```
 npm install mustom-validator
 ```
 
 ### Usage Examples
-
 To use the validator, import the `validator` instance and call the desired validation methods. Here is a simple example:
 
 
@@ -28,77 +28,108 @@ import { Validator } from 'mustom-validator'
 ```
 
 ```
-# Validate if the input value 23 is natural number, and not empty value.
-validator.single(23).naturalNumber().notEmpty().required()
+# Validate single value
+validator.single(23).naturalNumber().maxValue(100).notEmpty()
 ```
 
 ```
-# Validation with options
-validator.single(23, { }).string()
+# Validate single value with options
+validator.single(23, { softFail: true }).string().required()
 ```
 
 ```
 # Validate object
-validator.objectIterate()
+validator.objectIterate({
+    name: 'John Doe',
+    age: 30,
+    email: 'john.doe@example.com'
+}, {
+    name: () => validator.string().minLength(3).maxLength(50).notEmpty().required(),
+    age: () => validator.naturalNumber().minValue(0).maxValue(120).required(),
+    email: () => validator.email().notEmpty().required()
+}, { mode: 'strict', stripUnknown: true })
 ```
-
-```
-# Validate object with options. (In this case)
-
-```
-
-### Structure
-
 
 
 ### Action Types
+Action types define how the validator processes the input data. There are six action types:
+single, objectIterate, arrayObjectIterate, arrayIterate, setIterate, mapIterate.
 
-Action type is how this validator ...
-If
 
 ##### Single
+This action type is used to validate a single value.
 
 ```
-# Validation without option
-# It will validate if input value is a natural numer, not empty, and required.
-validator.single().naturalNumber().notEmpty().required()
-
-# Validation with options
-validator.single({}).string()
-
+validator.single(value, options)
 ```
-
-> Array is iterable object in Javascript. But it does not support 'iterate' action type.
-> Use single action instead.
 
 
 ##### ObjectIterate
- (Object, Array of Object)
+This action type is used to validate each property of an object against specified rules.
 
-
-
-
+```
+validator.objectIterate(object, rules, options)
+```
 
 ##### ArrayObjectIterate
+This action type is used to validate each object in an array against specified rules.
 
+```
+validator.arrayObjectIterate(arrayOfObjects, rules, options)
+```
 
+##### ArrayIterate
+This action type is used to validate each item in an array against a specified rule.
+```
+validator.arrayIterate(array, rule, options)
+```
 
+##### SetIterate
+This action type is used to validate each item in a set against a specified rule.
+```
+validator.setIterate(set, rule, options)
+```
+
+##### MapIterate
+This action type is used to validate each value in a map against specified rules.
+```
+validator.mapIterate(map, rules, options)
+```
 
 
 ### Options
+There are many options you can use in the validator.
 
-mode ('strict', 'flexible')
-This option is only applied for objectIterable, and arrayObjectIterate. If it is 'strict' validator will throw error if there is unknown(undefined) key in the input. It is useful when you check the value of request body in an API. If it is set as 'flexible' validator will ignore it.
+- itemValidationMode ('all', 'any', 'some', 'none', 'one', 'atLeast', 'atMost', 'exactly', 'first', 'last')
+This option is only applied for arrayIterate, setIterate. It defines how many items in the array or set should pass the validation rule. The default value is 'all'.
+'all' : All items must pass the validation rule.
+'any' : At least one item must pass the validation rule.
+'some' : More than one item must pass the validation rule.
+'none' : No items should pass the validation rule.
+'one' : Exactly one item must pass the validation rule.
+'atLeast' : At least a specified number of items must pass the validation rule. (You need to specify the number using 'minItems' option.)
+'atMost' : At most a specified number of items can pass the validation rule. (You need to specify the number using 'maxItems' option.)
+'exactly' : Exactly a specified number of items must pass the validation rule. (You need to specify the number using 'exactItems' option.)
+'first' : Only the first item is validated.
+'last' : Only the last item is validated.
 
 
-stripUnknown (true, false)
-This option is only applied for objectIterable, and arrayObjectIterate. If it is set as true, validator will remove this element from the refinement. If it is set as false, this element still in the refinement.
+- entryValidationMode ('strict', 'flexible')
+This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. It defines how many entries in the object should pass the validation rule. If it is 'strict' validator will throw error if there is any validation fail. If it is 'flexible' validator will ignore it. The default value is 'strict'.
 
-softFail (true, false)
-softFail opton is only apply for validation fail case. It will throw error if it is not a validation fail case, even if softFail option is set as true.
-(e.g. empty argument, or )
+- stripUnknown (true, false)
+This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. If it is set as true, validator will remove this element from the refinement. If it is set as false, this element still in the refinement. The default value is false.
 
+- softFail (true, false)
+This option is applied for all action types. If it is set as true, validator will not throw error even if validation fails. The default value is false.
+> This option will not work if error type is 'UsageError'. Because it is thrown when there is a problem with how the validator is used, not with the input data itself.
 
+- abortEarly (true, false)
+This option is applied for all action types. If it is set as true, validator will stop validation on the first error encountered. The default value is false.
+> This option will not work if 'softFail' option is set to false. Because in this case, validator will throw error immediately when validation fails.
+
+- strictDateValidation (true, false)
+This option is for date validation methods (dateTime, dateOnly). If it is set as true, validator will perform strict date validation, meaning it will reject invalid dates like February 30. The default value is false.
 
 ### Methods
 
@@ -133,11 +164,11 @@ Data type check
 
 Comparison
 - `is(expected)`
-- `isNot()`
+- `isNot(expected)`
 - `minValue(limit)`
 - `maxValue(limit)`
-- `in()`
-- `notIn()`
+- `in(list)`
+- `notIn(list)`
 - `exactLength(expected)`
 - `minLength(expected)`
 - `maxLength(expected)`
@@ -158,9 +189,10 @@ Misc
 
 
 ### Data Transformer
+The validator includes data transformer methods that allow you to transform the input value during the validation process.
 You can use data transformer, when you need to transform value.
-The return value (output) will be changed if you add data transfomer.
-And, if you add it in the middle of method, the value also changed. So, validation 
+The 'refinement' in return value will be changed if you add data transfomer.
+And, if you add it in the middle of method, the value also changed. So, validation methods after the transformer will be applied to the transformed value.
 
 ```
 // Example 1 : Transform 'mustom' to 'MUSTOM'. It will pass validation. 
@@ -173,12 +205,12 @@ validator.single(' MUSTOM ').string().toLowerCase().trim()
 // output : 'mustom'
 ```
 
-- `trim` Trim string
-- `toLowerCase` 
-- `toUpperCase`
-- `toString` Change to string. (Number, or array will)
-- `toNumber` Change number (Only applied to )
-- `toArray` 
+- `trim()` Trim string
+- `toLowerCase()` 
+- `toUpperCase()`
+- `toString()` Change to string. (Number, or array will)
+- `toNumber()` Change number (Only applied to )
+- `toArray()` 
 
 
 ### Return value
@@ -200,7 +232,8 @@ These errors extend the built-in Error class and provide specific messages for d
 
 
 ### Additional Utility
-This module provide addtional utility 'dataTypeChecker'.
+Data type checker
+This utility function checks the data type of the input value and returns it as a string.
 
 
 ```
@@ -227,9 +260,9 @@ Return values will be one of the following:
 `null`, `string`, `boolean`, `number`, `undefined`, `nan`, `array`, `regexp`, `date`, `object`, `map`, `set`, `bigint`
 
 Return `misc` (for any other types not covered above):
-
 function, symbol, error, weakmap, weakset, etc.
 
+>> If you set the option 'showMisc' as true, it will return exact type of 'misc'.
 
 ### License
 This library is under AGPL v3 Licensed. (It is same as the license of Mustom)

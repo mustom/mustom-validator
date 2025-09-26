@@ -82,42 +82,42 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the input is included in the comparison array.
-     * @param {Array} comparison - The array to compare against.
+     * Checks if the input is included in the list array.
+     * @param {Array} list - The array to compare against.
      */
-    in: function (comparison) {
+    in: function (list) {
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
-        if (!Array.isArray(comparison)) {
+        if (!Array.isArray(list)) {
             errorHandler(this, 'UsageError', `The type of '${expected}' should be an Array.`)
         }
 
         if (this.dataType === 'array') {
             for (const item of this.input) {
-                if (!comparison.includes(item)) {
+                if (!list.includes(item)) {
                     errorHandler(this, 'ValidationError', `The value '${item}' is not in the list.`)
                 }
             }
         }
 
-        if (!comparison.includes(this.input)) {
+        if (!list.includes(this.input)) {
             errorHandler(this, 'ValidationError', `The value '${this.input}' is not in the list.`)
         }
 
         return this
     },
     /**
-     * Checks if the input is not included in the comparison array.
-     * @param {Array} comparison - The array to compare against.
+     * Checks if the input is not included in the list array.
+     * @param {Array} list - The array to compare against.
      */
-    notIn: function (comparison) {
+    notIn: function (list) {
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
-        if (!Array.isArray(comparison)) {
-            errorHandler(this, 'UsageError', `The type of '${comparison}' should be an Array.`)
+        if (!Array.isArray(list)) {
+            errorHandler(this, 'UsageError', `The type of '${list}' should be an Array.`)
         }
 
         if (this.dataType === 'array') {
             for (const item of this.input) {
-                if (comparison.includes(item)) {
+                if (list.includes(item)) {
                     errorHandler(this, 'ValidationError', `The value '${item}' is not in the list.`)
                 }
             }

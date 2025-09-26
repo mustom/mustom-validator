@@ -2,7 +2,7 @@
     "name": "mustom-validator",
     "version": "0.0.1",
     "description": "A validation library for the Mustom project",
-    "homepage": "https://github.com/mustom/mustom-validator#readme",
+    "homepage": "https://mustom.com",
     "bugs": {
         "url": "https://github.com/mustom/mustom-validator/issues"
     },
@@ -14,7 +14,10 @@
     "author": {
         "name": "Ryu Woosik",
         "email": "ryuwoosil@gmail.com",
-        "url": "https://mustom.com"
+        "url": "https://submem.com",
+        "github": "https://github.com/mustom",
+        "linkedin": "https://www.linkedin.com/in/chancehouse/",
+        "facebook": "https://www.facebook.com/redcomma"
     },
     "type": "commonjs",
     "main": "index.js",

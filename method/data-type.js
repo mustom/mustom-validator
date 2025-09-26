@@ -710,6 +710,36 @@ const dataType = {
             errorHandler(this, 'ValidationError', `The value should be a valid date format.`)
         }
 
+        // Additional logical validation if strictDateValidation option is enabled
+        if (this.option.strictDateValidation) {
+            const match = this.input.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+            if (match) {
+                const year = parseInt(match[1])
+                const month = parseInt(match[2])
+                const day = parseInt(match[3])
+
+                // Basic range validation
+                if (month < 1 || month > 12) {
+                    errorHandler(this, 'ValidationError', `The month '${month}' should be between 1 and 12.`)
+                    return this
+                }
+
+                if (day < 1 || day > 31) {
+                    errorHandler(this, 'ValidationError', `The day '${day}' should be between 1 and 31.`)
+                    return this
+                }
+
+                // Check if the constructed date matches input (prevents Feb 30, etc.)
+                const testDate = new Date(year, month - 1, day)
+                if (testDate.getFullYear() !== year || 
+                    testDate.getMonth() !== month - 1 ||
+                    testDate.getDate() !== day) {
+                    errorHandler(this, 'ValidationError', `The date '${this.input}' is not a valid date.`)
+                    return this
+                }
+            }
+        }
+
         return this
     }
 }
