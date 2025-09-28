@@ -148,8 +148,6 @@ const dataTransformation = {
      * If the data is an array, object, or Set, it will convert each element to a string.
      */
     toString: function () {
-
-        
         if (this.refinement === null || this.refinement === undefined) {
             return this
         }

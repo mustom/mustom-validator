@@ -24,7 +24,7 @@ const regex = {
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
-            errorHandler(this, 'ValidationError', `The value is in the wrong format.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} is in the wrong format.`)
         }
 
         return this
@@ -48,7 +48,7 @@ const regex = {
         const isPassed = regex.test(this.input)
 
         if (isPassed) {
-            errorHandler(this, 'ValidationError', `The value is in the wrong format.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} is in the wrong format.`)
         }
 
         return this

@@ -13,7 +13,7 @@ const condition = {
             errorHandler(
                 this,
                 'ValidationError',
-                `The value '${this.input}' is required.`
+                `The value {{input}} is required.`
             )
         }
 
@@ -63,7 +63,7 @@ const condition = {
         const isPassed = regex.test(this.input)
 
         if (isPassed) {
-            errorHandler(this, 'ValidationError', `The value '${this.input}' should not contain whitespace.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should not contain whitespace.`)
         }
 
         return this

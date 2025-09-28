@@ -15,7 +15,7 @@ const comparison = {
         }
 
         if (this.input !== expected) {
-            errorHandler(this, 'ValidationError', `The value should be '${expected}'`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should be '${expected}'`)
         }
 
         return this
@@ -30,7 +30,7 @@ const comparison = {
         }
 
         if (this.input === expected) {
-            errorHandler(this, 'ValidationError', `The value should not be '${expected}'`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should not be '${expected}'`)
         }
 
         return this
@@ -45,15 +45,15 @@ const comparison = {
         }
 
         if (this.dataType !== 'number') {
-            errorHandler(this, 'ValidationError', `The value should be a number.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a number.`)
         }
 
         if (typeof limit !== 'number') {
-            errorHandler(this, 'ValidationError', `The limit should be a number.`)
+            errorHandler(this, 'ValidationError', `The limit {{input}} should be a number.`)
         }
 
         if (this.input < limit) {
-            errorHandler(this, 'ValidationError', `The value should be equal or greater than '${limit}'`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should be equal or greater than '${limit}'`)
         }
 
         return this
@@ -68,15 +68,15 @@ const comparison = {
         }
 
         if (this.dataType !== 'number') {
-            errorHandler(this, 'ValidationError', `The value should be a number.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a number.`)
         }
 
         if (typeof limit !== 'number') {
-            errorHandler(this, 'ValidationError', `The limit should be a number.`)
+            errorHandler(this, 'ValidationError', `The limit {{input}} should be a number.`)
         }
 
         if (this.input > limit) {
-            errorHandler(this, 'ValidationError', `The value should be equal or less than '${limit}'`)
+            errorHandler(this, 'ValidationError', `The value {{input}} should be equal or less than '${limit}'`)
         }
 
         return this
@@ -100,7 +100,7 @@ const comparison = {
         }
 
         if (!list.includes(this.input)) {
-            errorHandler(this, 'ValidationError', `The value '${this.input}' is not in the list.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} is not in the list.`)
         }
 
         return this
@@ -124,7 +124,7 @@ const comparison = {
         }
 
         if (comparison.includes(this.input)) {
-            errorHandler(this, 'ValidationError', `The value '${this.input}' is not in the list.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} is not in the list.`)
         }
 
         return this
@@ -145,7 +145,7 @@ const comparison = {
         const length = calculateLength(this.input, this.dataType)
        
         if (expected !== length) {
-            errorHandler(this, 'ValidationError', `The length of the value should be ${expected}.`)
+            errorHandler(this, 'ValidationError', `The length of the value {{input}} should be ${expected}.`)
         }
 
         return this
@@ -166,7 +166,7 @@ const comparison = {
         const length = calculateLength(this.input, this.dataType)
 
         if (expected > length) {
-            errorHandler(this, 'ValidationError', `The length of the value should be equal or greater than ${expected}.`)
+            errorHandler(this, 'ValidationError', `The length of the value {{input}} should be equal or greater than ${expected}.`)
         }
 
         return this
@@ -187,7 +187,7 @@ const comparison = {
         const length = calculateLength(this.input, this.dataType)
 
         if (expected < length) {
-            errorHandler(this, 'ValidationError', `The length of the value should be equal or less than ${expected}.`)
+            errorHandler(this, 'ValidationError', `The length of the value {{input}} should be equal or less than ${expected}.`)
         }
 
         return this

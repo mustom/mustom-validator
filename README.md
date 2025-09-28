@@ -132,9 +132,21 @@ This option is applied for all action types. If it is set as true, validator wil
 This option is for date validation methods (dateTime, dateOnly). If it is set as true, validator will perform strict date validation, meaning it will reject invalid dates like February 30. The default value is false.
 
 ### Methods
+Data Type Validation
+- `any()`
+- `null()`
+- `undefined()`
+- `emptyString()`
+- `emptyArray()`
+- `emptyObject()`
+- `nan()`
+- `map()`
+- `set()`
+- `bigInt()`
+- `function()`
+- `symbol()`
+- `regexp()`
 
-
-Data type check
 - `object()`
 - `arrayOfObject()`
 - `array()`
@@ -162,7 +174,7 @@ Data type check
 - `dateTime()`
 - `dateOnly()`
 
-Comparison
+Comparational Validation
 - `is(expected)`
 - `isNot(expected)`
 - `minValue(limit)`
@@ -173,13 +185,13 @@ Comparison
 - `minLength(expected)`
 - `maxLength(expected)`
 
-Condition
+Conditional Validation
 - `required()`
 - `notEmpty()`
 - `noWhitespace()`
 - `notDuplicate()`
 
-RegEx
+RegEx Validation
 - `regexTrue(regex)`
 - `regexFalse(regex)`
 
@@ -217,24 +229,19 @@ validator.single(' MUSTOM ').string().toLowerCase().trim()
 
 
 ### Custom Error Object
-The project includes custom error classes for better error handling:
-
+The validator provides a custom error object that contains detailed information about validation failures.
 If input value is not passed validation rule(s), validator will thorow error if 'softFail : true' option is not specified.
-In this case, validator will ... in custom error object.
-
+In this case, validator will include the failed validation rules in the custom error object.
 
 - `BaseError`
 - `ValidationError`
-- `UsageError`
 - `UsageError`
 
 These errors extend the built-in Error class and provide specific messages for different validation failures.
 
 
-### Additional Utility
-Data type checker
+### Additional Utility - Data type checker
 This utility function checks the data type of the input value and returns it as a string.
-
 
 ```
 import { dataTypeChecker } from 'mustom-validator'
@@ -254,15 +261,13 @@ console.log(dataType3) // Return 'object'
 console.log(dataType4) // Return 'array'
 ```
 
-
 Return values will be one of the following:
-
 `null`, `string`, `boolean`, `number`, `undefined`, `nan`, `array`, `regexp`, `date`, `object`, `map`, `set`, `bigint`
 
 Return `misc` (for any other types not covered above):
 function, symbol, error, weakmap, weakset, etc.
 
->> If you set the option 'showMisc' as true, it will return exact type of 'misc'.
+> If you set the option 'showMisc' as true, it will return exact type of 'misc'.
 
 ### License
 This library is under AGPL v3 Licensed. (It is same as the license of Mustom)

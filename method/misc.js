@@ -14,8 +14,6 @@ const misc = {
             errorHandler(this, 'ValidationError', 'The input for gridOption() must be an object.')
         }
 
-        const validKeys = ['menu', 'limit', 'offset', 'orderDirection', 'orderBy', 'attributes', 'searchBy']
-
         for (const key in this.input) {
 
             // Uncomment the following lines to enforce strict key checking (Disallow undefined keys)
