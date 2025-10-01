@@ -101,17 +101,19 @@ validator.mapIterate(map, rules, options)
 There are many options you can use in the validator.
 
 - itemValidationMode ('all', 'any', 'some', 'none', 'one', 'atLeast', 'atMost', 'exactly', 'first', 'last')
+
 This option is only applied for arrayIterate, setIterate. It defines how many items in the array or set should pass the validation rule. The default value is 'all'.
-'all' : All items must pass the validation rule.
-'any' : At least one item must pass the validation rule.
-'some' : More than one item must pass the validation rule.
-'none' : No items should pass the validation rule.
-'one' : Exactly one item must pass the validation rule.
-'atLeast' : At least a specified number of items must pass the validation rule. (You need to specify the number using 'minItems' option.)
-'atMost' : At most a specified number of items can pass the validation rule. (You need to specify the number using 'maxItems' option.)
-'exactly' : Exactly a specified number of items must pass the validation rule. (You need to specify the number using 'exactItems' option.)
-'first' : Only the first item is validated.
-'last' : Only the last item is validated.
+
+`all` : All items must pass the validation rule.
+`any` : At least one item must pass the validation rule.
+`some` : More than one item must pass the validation rule.
+`none` : No items should pass the validation rule.
+`one` : Exactly one item must pass the validation rule.
+`atLeast` : At least a specified number of items must pass the validation rule. (You need to specify the number using 'minItems' option.)
+`atMost` : At most a specified number of items can pass the validation rule. (You need to specify the number using 'maxItems' option.)
+`exactly` : Exactly a specified number of items must pass the validation rule. (You need to specify the number using 'exactItems' option.)
+`first` : Only the first item is validated.
+`last` : Only the last item is validated.
 
 
 - entryValidationMode ('strict', 'flexible')
@@ -131,14 +133,15 @@ This option is applied for all action types. If it is set as true, validator wil
 - strictDateValidation (true, false)
 This option is for date validation methods (dateTime, dateOnly). If it is set as true, validator will perform strict date validation, meaning it will reject invalid dates like February 30. The default value is false.
 
+- minItems
+
+- maxItems
+
 ### Methods
 Data Type Validation
 - `any()`
 - `null()`
 - `undefined()`
-- `emptyString()`
-- `emptyArray()`
-- `emptyObject()`
 - `nan()`
 - `map()`
 - `set()`

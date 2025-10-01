@@ -31,7 +31,7 @@ const { validator } = require('./index.js')
 
 const data = [ 123, 'test', 456, 1.34]
 
-const aa = validator.arrayIterate(data, () => validator.string().required(), { itemValidationMode: 'any' })
+const aa = validator.arrayIterate(data, validator.string().required(), { itemValidationMode: 'any' })
 
 console.log(aa)
 

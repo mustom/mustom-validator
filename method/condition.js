@@ -25,27 +25,61 @@ const condition = {
      */
     notEmpty: function () {
         if (this.input === null || this.input === '' || this.input === undefined) {
-            errorHandler(this, 'ValidationError', `The value is empty.`)
+            errorHandler(this, 'ValidationError', `The value {{input}} is empty.`)
+        }
+
+        if (this.dataType === 'string' && this.input.trim() === '') {
+            errorHandler(this, 'ValidationError', `The value {{input}} is empty.`)
         }
 
         if (this.dataType === 'array' && !this.input.length) {
-            errorHandler(this, 'ValidationError', `The value of array is empty.`)
+            errorHandler(this, 'ValidationError', `The value of array {{input}} is empty.`)
         }
 
         if (this.dataType === 'object' && !Object.keys(this.input).length) {
-            errorHandler(this, 'ValidationError', `The value of object is empty.`)
+            errorHandler(this, 'ValidationError', `The value of object {{input}} is empty.`)
         }
 
         if (this.dataType === 'map' && !this.input.size) {
-            errorHandler(this, 'ValidationError', `The value of map is empty.`)
+            errorHandler(this, 'ValidationError', `The value of map {{input}} is empty.`)
         }
 
         if (this.dataType === 'set' && !this.input.size) {
-            errorHandler(this, 'ValidationError', `The value of set is empty.`)
+            errorHandler(this, 'ValidationError', `The value of set {{input}} is empty.`)
         }
 
         return this
     },
+
+
+    empty: function () {
+        if (this.input === null || this.input === '' || this.input === undefined) {
+            errorHandler(this, 'ValidationError', `The value {{input}} is not empty.`)
+        }
+
+        if (this.dataType === 'string' && this.input.trim() !== '') {
+            errorHandler(this, 'ValidationError', `The value {{input}} is not empty.`)
+        }
+
+        if (this.dataType === 'array' && this.input.length) {
+            errorHandler(this, 'ValidationError', `The value of array {{input}} is not empty.`)
+        }
+
+        if (this.dataType === 'object' && Object.keys(this.input).length) {
+            errorHandler(this, 'ValidationError', `The value of object {{input}} is not empty.`)
+        }
+
+        if (this.dataType === 'map' && this.input.size) {
+            errorHandler(this, 'ValidationError', `The value of map {{input}} is not empty.`)
+        }
+
+        if (this.dataType === 'set' && this.input.size) {
+            errorHandler(this, 'ValidationError', `The value of set {{input}} is not empty.`)
+        }
+
+        return this
+    },
+
     /**
      * Checks if the string contains any whitespace characters (spaces, tabs, etc.).
      * It only works when the data type is 'string'.

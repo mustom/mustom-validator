@@ -3,8 +3,122 @@
 
 
 const { errorHandler } = require('../util/error-handler')
+const { dataTypeChecker } = require('../util/data-type-checker')
 
 const dataType = {
+
+    any: function () {
+        return this
+    },
+
+    null: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'null') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be null.`)
+        }
+
+        return this
+    },
+
+    undefined: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        errorHandler(this, 'ValidationError', `The value {{input}} should be undefined.`)
+
+        return this
+    },
+
+    nan: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (!this.dataType !== 'nan') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be NaN.`)
+        }
+
+        return this
+    },
+
+    map: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'map') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a map.`)
+        }
+
+        return this
+    },
+
+    set: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'set') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a set.`)
+        }
+
+        return this
+    },
+
+    bigInt: function () {
+
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'bigint') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a bigint.`)
+        }
+
+        return this
+    },
+
+    function: function () {
+
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'function') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a function.`)
+        }
+
+        return this
+    },
+
+    symbol: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'symbol') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a symbol.`)
+        }
+
+        return this
+
+    },
+
+    regexp: function () {
+        if (this.dataType === 'undefined') {
+            return this
+        }
+
+        if (this.dataType !== 'regexp') {
+            errorHandler(this, 'ValidationError', `The value {{input}} should be a regexp.`)
+        }
+
+        return this
+    },
     /**
      * Checks if the input is an object.
      * @example
@@ -12,11 +126,11 @@ const dataType = {
      * validator.single([1, 2, 3]).object() // Throws an error
      */
     object: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (this.input.constructor !== Object) {
+        if (this.dataType !== 'object') {
             errorHandler(this, 'ValidationError', `The value {{input}} should be an object.`)
         }
 
@@ -29,16 +143,18 @@ const dataType = {
      * validator.single([1, 2, 3]).arrayOfObject() // Throws an error
      */
     arrayOfObject: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (!Array.isArray(this.input)) {
+        if (this.dataType !== 'array') {
             errorHandler(this, 'ValidationError', `The value {{input}} should be an array of objects.`)
         }
 
         for (const item of this.input) {
-            if (item.constructor !== Object) {
+            const itemType = dataTypeChecker(item)
+
+            if (itemType !== 'object') {
                 errorHandler(this, 'ValidationError', `The value {{input}} should be an array of objects.`)
             }
         }
@@ -51,12 +167,13 @@ const dataType = {
      * validator.single([1, 2, 3]).array() // Passes
      * validator.single('hello').array() // Throws an error
      */
-    array: function (rule = 'all') {
-        if (this.input === undefined) {
+    array: function () {
+
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (!Array.isArray(this.input)) {
+        if (this.dataType !== 'array') {
             errorHandler(this, 'ValidationError', `The value {{input}} should be an array.`)
         }
 
@@ -71,11 +188,11 @@ const dataType = {
      */
     string: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (typeof this.input !== 'string') {
+        if (this.dataType !== 'string') {
             errorHandler(this, 'ValidationError', `The value {{input}} should be a string.`)
         }
 
@@ -89,11 +206,11 @@ const dataType = {
      * validator.single('true').boolean() // Throws an error
      */
     boolean: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (typeof this.input !== 'boolean') {
+        if (this.dataType !== 'boolean') {
             errorHandler(this, 'ValidationError', `The value {{input}} should be a boolean.`)
         }
 
@@ -108,22 +225,11 @@ const dataType = {
      * validator.single('mustom').number() // Throws an error
      */
     number: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (['array'].includes(this.dataType)) {
-            for (const item of this.input) {
-                if (isNaN(item)) {
-                    errorHandler(this, 'ValidationError', `The value {{input}} should be a number.`)
-                }
-            }
-            // Empty array is allowed. If you want to check the empty array, use 'notEmpty' method.
-            return this
-        }
-
-
-        if (isNaN(this.input)) {
+        if (this.dataType !== 'number') {
             errorHandler(
                 this,
                 'ValidationError',
@@ -144,11 +250,11 @@ const dataType = {
      */
     nonNegativeNumber: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (isNaN(this.input) || this.input < 0) {
+        if (this.dataType !== 'number' || this.input < 0) {
             errorHandler(
                 this,
                 'ValidationError',
@@ -169,11 +275,11 @@ const dataType = {
      */
     positiveNumber: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (isNaN(this.input) || this.input <= 0) {
+        if (this.dataType !== 'number' || this.input <= 0) {
             errorHandler(
                 this,
                 'ValidationError',
@@ -194,11 +300,11 @@ const dataType = {
      */
     naturalNumber: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (this.input % 1 !== 0 || this.input <= 0 || isNaN(this.input)) {
+        if (this.input % 1 !== 0 || this.input <= 0 || this.dataType !== 'number') {
             errorHandler(
                 this,
                 'ValidationError',
@@ -219,11 +325,11 @@ const dataType = {
      */
     wholeNumber: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (this.input % 1 !== 0 || !this.input < 0 || isNaN(this.input)) {
+        if (this.input % 1 !== 0 || !this.input < 0 || this.dataType !== 'number') {
             errorHandler(
                 this,
                 'ValidationError',
@@ -244,11 +350,11 @@ const dataType = {
      */
     integer: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (this.input % 1 !== 0 || isNaN(this.input)) {
+        if (this.input % 1 !== 0 || this.dataType !== 'number') {
             errorHandler(
                 this,
                 'ValidationError',
@@ -269,11 +375,11 @@ const dataType = {
      */
     negativeInteger: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        if (this.input % 1 !== 0 || !this.input >= 0 || isNaN(this.input)) {
+        if (this.input % 1 !== 0 || !this.input >= 0 || this.dataType !== 'number') {
             errorHandler(
                 this,
                 'ValidationError',
@@ -291,7 +397,7 @@ const dataType = {
      */
     email: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -316,7 +422,7 @@ const dataType = {
      */
     url: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -338,12 +444,12 @@ const dataType = {
      */
     ip: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
-        const regex =
-            /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/
+        const regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/
+        
         const isPassed = regex.test(this.input)
 
         if (!isPassed) {
@@ -363,7 +469,7 @@ const dataType = {
      */
     code: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -398,7 +504,7 @@ const dataType = {
      */
     path: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -425,7 +531,7 @@ const dataType = {
      * validator.single('mus/tom').code() // Throws an error
      */
     injectionSafeString: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -453,7 +559,7 @@ const dataType = {
      */
     alphabet: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -477,7 +583,7 @@ const dataType = {
      */
     uppercase: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -500,7 +606,7 @@ const dataType = {
      * validator.single('mustom@').lowercase() // Throws an error
      */
     lowercase: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -524,7 +630,7 @@ const dataType = {
      */
     alphaNumeric: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -553,7 +659,7 @@ const dataType = {
      */
     password: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
@@ -578,13 +684,13 @@ const dataType = {
      */
     imageFile: function () {
 
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
 
         const regex = /[^\s]+(.*?).(jpg|jpeg|png|gif|bmp|tiff|tif|svg|webp)$/
 
-        if (Array.isArray(this.input)) {
+        if (this.dataType === 'array') {
             for (const item of this.input) {
                 const valueToLowerCase = item.toLowerCase()
                 if (!regex.test(valueToLowerCase)) {
@@ -613,7 +719,7 @@ const dataType = {
      * validator.single('09:05:02').dateTime() // Throws an error
      */
     dateTime: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
         
@@ -699,7 +805,7 @@ const dataType = {
      * validator.single('05-01-2023').dateOnly() // Throws an error
      */
     dateOnly: function () {
-        if (this.input === undefined) {
+        if (this.dataType === 'undefined') {
             return this
         }
         
