@@ -11,6 +11,9 @@ const regex = {
      * If it does not match, a ValidationError is thrown.
      */
     regexTrue: function (regex) {
+
+        this.criterion = 'regexTrue'
+
         if (this.input === undefined) {
             return this
         }
@@ -35,6 +38,9 @@ const regex = {
      * If it matches, a ValidationError is thrown.
      */
     regexFalse: function (regex) {
+
+        this.criterion = 'regexFalse'
+        
         if (this.input === undefined) {
             return this
         }

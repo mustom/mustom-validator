@@ -9,6 +9,9 @@ const condition = {
      * Please note that `null` is a valid value. If you want to check for null, use `notEmpty`.
      */
     required: function () {
+
+        this.criterion = 'required'
+
         if (this.input === undefined) {
             errorHandler(
                 this,
@@ -24,6 +27,9 @@ const condition = {
      * If input is an array, or an object, it checks if they are empty.
      */
     notEmpty: function () {
+
+        this.criterion = 'notEmpty'
+
         if (this.input === null || this.input === '' || this.input === undefined) {
             errorHandler(this, 'ValidationError', `The value {{input}} is empty.`)
         }
@@ -53,6 +59,9 @@ const condition = {
 
 
     empty: function () {
+
+        this.criterion = 'empty'
+
         if (this.input === null || this.input === '' || this.input === undefined) {
             errorHandler(this, 'ValidationError', `The value {{input}} is not empty.`)
         }
@@ -85,6 +94,9 @@ const condition = {
      * It only works when the data type is 'string'.
      */
     noWhitespace: function () {
+
+        this.criterion = 'noWhitespace'
+
         if (this.input === undefined) {
             return this
         }
@@ -107,6 +119,9 @@ const condition = {
      * It only works when the data type is 'array'.
      */
     notDuplicate: function () {
+
+        this.criterion = 'notDuplicate'
+        
         if (this.input === undefined) {
             return this
         }

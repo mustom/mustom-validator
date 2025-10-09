@@ -10,6 +10,9 @@ const comparison = {
      * @param {*} expected - The expected value.
      */
     is: function (expected) {
+
+        this.criterion = 'is'
+
         if (this.input === undefined) {
             return this
         }
@@ -25,6 +28,9 @@ const comparison = {
      * @param {*} expected - The expected value.
      */
     isNot: function (expected) {
+
+        this.criterion = 'isNot'
+
         if (this.input === undefined) {
             return this
         }
@@ -40,6 +46,9 @@ const comparison = {
      * @param {number} limit - The minimum value.
      */
     minValue: function (limit) {
+
+        this.criterion = 'minValue'
+
         if (this.input === undefined) {
             return this
         }
@@ -63,6 +72,9 @@ const comparison = {
      * @param {number} limit - The maximum value.
      */
     maxValue: function (limit) {
+
+        this.criterion = 'maxValue'
+
         if (this.input === undefined) {
             return this
         }
@@ -86,6 +98,9 @@ const comparison = {
      * @param {Array} list - The array to compare against.
      */
     in: function (list) {
+
+        this.criterion = 'in'
+
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(list)) {
             errorHandler(this, 'UsageError', `The type of '${expected}' should be an Array.`)
@@ -110,6 +125,9 @@ const comparison = {
      * @param {Array} list - The array to compare against.
      */
     notIn: function (list) {
+
+        this.criterion = 'notIn'
+
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(list)) {
             errorHandler(this, 'UsageError', `The type of '${list}' should be an Array.`)
@@ -134,6 +152,9 @@ const comparison = {
      * @param {number} expected - The expected length.
      */
     exactLength: function (expected) {
+
+        this.criterion = 'exactLength'
+
         if (this.input === undefined) {
             return this
         }
@@ -155,6 +176,9 @@ const comparison = {
      * @param {number} expected - The expected minimum length.
      */
     minLength: function (expected) {
+
+        this.criterion = 'minLength'
+
         if (this.input === undefined) {
             return this
         }
@@ -176,6 +200,9 @@ const comparison = {
      * @param {number} expected - The expected maximum length.
      */
     maxLength: function (expected) {
+
+        this.criterion = 'maxLength'
+        
         if (this.input === undefined) {
             return this
         }

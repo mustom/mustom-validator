@@ -6,32 +6,39 @@ const { validator } = require('./index.js')
 
 
 
-// const data = {
-//     aa: '123a',
-//     bb: 'test',
-//     cc: {zz: 11, yy: 'hello'},
-//     dd: [1,2,3],
-//     zz: {
-//         xx: 'world',
-//         yy: 456
-//     }
-// }
+const data = {
+    aa: '123a',
+    bb: 'test',
+    cc: {zz: 11, yy: 'hello'},
+    dd: {
+        xx: 'world',
+        yy: 456
+    },
+    zz: 'extra'
+}
 
-// const aa = validator.objectIterate(data, {
-//     aa: () => validator.number().required().toString(),
-//     bb: () => validator.string().required(),
-//     cc: () => validator.boolean().required(),
-//     dd: {
-//         xx: () => validator.number().required(),
-//         yy: () => validator.string().required()
-//     }
-//     }, { softFail: true })
-
-
-
-const data = [ 123, 'test', 456, 1.34]
-
-const aa = validator.arrayIterate(data, validator.string().required(), { itemValidationMode: 'any' })
+const aa = validator.objectIterate(data, {
+    aa: () => validator.number().required().toString(),
+    bb: () => validator.string().required(),
+    dd: {
+        xx: () => validator.number().required(),
+        yy: () => validator.string().required()
+    },
+    cc: () => validator.boolean().required(),
+    req: () => validator.string()
+    }, {
+        softFail: true,
+        entryValidationMode: 'strict',
+        stripUnknown: false
+    })
 
 console.log(aa)
+
+
+// const data = [ 123, 'test', 456, 1.34]
+
+// const bb = validator.arrayIterate(data, () => validator.string().toString().required(), { itemValidationMode: 'any', softFail: true, abortEarly: true })
+
+
+// console.log(bb)
 

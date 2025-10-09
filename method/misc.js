@@ -10,6 +10,9 @@ const misc = {
      * It used to validate Mustom admin panel grid options.
      */
     gridOption: function () {
+
+        this.criterion = 'gridOption'
+        
         if (dataTypeChecker(this.input) !== 'object') {
             errorHandler(this, 'ValidationError', 'The input for gridOption() must be an object.')
         }

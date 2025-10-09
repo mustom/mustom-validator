@@ -6,12 +6,13 @@ const { errorHandler } = require('../util/error-handler')
 const { dataTypeChecker } = require('../util/data-type-checker')
 
 const dataType = {
-
     any: function () {
         return this
     },
 
     null: function () {
+
+        this.criterion = 'null'
         if (this.dataType === 'undefined') {
             return this
         }
@@ -24,6 +25,8 @@ const dataType = {
     },
 
     undefined: function () {
+        this.criterion = 'undefined'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -34,6 +37,9 @@ const dataType = {
     },
 
     nan: function () {
+
+        this.criterion = 'nan'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -46,6 +52,9 @@ const dataType = {
     },
 
     map: function () {
+
+        this.criterion = 'map'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -58,6 +67,9 @@ const dataType = {
     },
 
     set: function () {
+
+        this.criterion = 'set'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -70,6 +82,8 @@ const dataType = {
     },
 
     bigInt: function () {
+
+        this.criterion = 'bigint'
 
         if (this.dataType === 'undefined') {
             return this
@@ -84,6 +98,8 @@ const dataType = {
 
     function: function () {
 
+        this.criterion = 'function'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -96,6 +112,9 @@ const dataType = {
     },
 
     symbol: function () {
+
+        this.criterion = 'symbol'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -109,6 +128,9 @@ const dataType = {
     },
 
     regexp: function () {
+
+        this.criterion = 'regexp'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -126,6 +148,9 @@ const dataType = {
      * validator.single([1, 2, 3]).object() // Throws an error
      */
     object: function () {
+
+        this.criterion = 'object'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -143,6 +168,9 @@ const dataType = {
      * validator.single([1, 2, 3]).arrayOfObject() // Throws an error
      */
     arrayOfObject: function () {
+
+        this.criterion = 'arrayOfObject'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -169,6 +197,8 @@ const dataType = {
      */
     array: function () {
 
+        this.criterion = 'array'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -188,6 +218,8 @@ const dataType = {
      */
     string: function () {
 
+        this.criterion = 'string'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -206,6 +238,9 @@ const dataType = {
      * validator.single('true').boolean() // Throws an error
      */
     boolean: function () {
+
+        this.criterion = 'boolean'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -225,6 +260,9 @@ const dataType = {
      * validator.single('mustom').number() // Throws an error
      */
     number: function () {
+
+        this.criterion = 'number'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -249,6 +287,8 @@ const dataType = {
      * validator.single(-1).nonNegativeNumber() // Throws an error
      */
     nonNegativeNumber: function () {
+
+        this.criterion = 'nonNegativeNumber'
 
         if (this.dataType === 'undefined') {
             return this
@@ -275,6 +315,8 @@ const dataType = {
      */
     positiveNumber: function () {
 
+        this.criterion = 'positiveNumber'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -299,6 +341,8 @@ const dataType = {
      * validator.single(0).naturalNumber() // Throws an error
      */
     naturalNumber: function () {
+
+        this.criterion = 'naturalNumber'
 
         if (this.dataType === 'undefined') {
             return this
@@ -325,6 +369,8 @@ const dataType = {
      */
     wholeNumber: function () {
 
+        this.criterion = 'wholeNumber'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -349,6 +395,8 @@ const dataType = {
      * validator.single(1.1).integer() // Throws an error
      */
     integer: function () {
+
+        this.criterion = 'integer'
 
         if (this.dataType === 'undefined') {
             return this
@@ -375,6 +423,8 @@ const dataType = {
      */
     negativeInteger: function () {
 
+        this.criterion = 'negativeInteger'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -396,6 +446,8 @@ const dataType = {
      * validator.single('mustom').email() // Throws an error
      */
     email: function () {
+
+        this.criterion = 'email'
 
         if (this.dataType === 'undefined') {
             return this
@@ -422,6 +474,8 @@ const dataType = {
      */
     url: function () {
 
+        this.criterion = 'url'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -443,6 +497,8 @@ const dataType = {
      * validator.single('mustom.com').ip() // Throws an error
      */
     ip: function () {
+
+        this.criterion = 'ip'
 
         if (this.dataType === 'undefined') {
             return this
@@ -468,6 +524,8 @@ const dataType = {
      * validator.single('123-mustom').code() // Throws an error
      */
     code: function () {
+
+        this.criterion = 'code'
 
         if (this.dataType === 'undefined') {
             return this
@@ -504,6 +562,8 @@ const dataType = {
      */
     path: function () {
 
+        this.criterion = 'path'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -531,6 +591,9 @@ const dataType = {
      * validator.single('mus/tom').code() // Throws an error
      */
     injectionSafeString: function () {
+
+        this.criterion = 'injectionSafeString'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -559,6 +622,8 @@ const dataType = {
      */
     alphabet: function () {
 
+        this.criterion = 'alphabet'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -583,6 +648,8 @@ const dataType = {
      */
     uppercase: function () {
 
+        this.criterion = 'uppercase'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -606,6 +673,9 @@ const dataType = {
      * validator.single('mustom@').lowercase() // Throws an error
      */
     lowercase: function () {
+
+        this.criterion = 'lowercase'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -629,6 +699,8 @@ const dataType = {
      * validator.single('mustom-123').alphaNumeric() // Throws an error
      */
     alphaNumeric: function () {
+
+        this.criterion = 'alphaNumeric'
 
         if (this.dataType === 'undefined') {
             return this
@@ -659,6 +731,8 @@ const dataType = {
      */
     password: function () {
 
+        this.criterion = 'password'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -683,6 +757,8 @@ const dataType = {
      * validator.single('image').imageFile() // Throws an error
      */
     imageFile: function () {
+
+        this.criterion = 'imageFile'
 
         if (this.dataType === 'undefined') {
             return this
@@ -719,6 +795,9 @@ const dataType = {
      * validator.single('09:05:02').dateTime() // Throws an error
      */
     dateTime: function () {
+
+        this.criterion = 'dateTime'
+
         if (this.dataType === 'undefined') {
             return this
         }
@@ -805,6 +884,9 @@ const dataType = {
      * validator.single('05-01-2023').dateOnly() // Throws an error
      */
     dateOnly: function () {
+
+        this.criterion = 'dateOnly'
+        
         if (this.dataType === 'undefined') {
             return this
         }

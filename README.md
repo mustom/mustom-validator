@@ -100,27 +100,26 @@ validator.mapIterate(map, rules, options)
 ### Options
 There are many options you can use in the validator.
 
-- itemValidationMode ('all', 'any', 'some', 'none', 'one', 'atLeast', 'atMost', 'exactly', 'first', 'last')
+- itemValidationMode ('all', 'any', 'none', 'one', 'atLeast', 'atMost', 'exactly')
 
 This option is only applied for arrayIterate, setIterate. It defines how many items in the array or set should pass the validation rule. The default value is 'all'.
 
 `all` : All items must pass the validation rule.
 `any` : At least one item must pass the validation rule.
-`some` : More than one item must pass the validation rule.
 `none` : No items should pass the validation rule.
 `one` : Exactly one item must pass the validation rule.
-`atLeast` : At least a specified number of items must pass the validation rule. (You need to specify the number using 'minItems' option.)
-`atMost` : At most a specified number of items can pass the validation rule. (You need to specify the number using 'maxItems' option.)
-`exactly` : Exactly a specified number of items must pass the validation rule. (You need to specify the number using 'exactItems' option.)
-`first` : Only the first item is validated.
-`last` : Only the last item is validated.
+`atLeast` : At least a specified number of items must pass the validation rule. (You need to specify the number using 'itemValidationThreshold' option.)
+`atMost` : At most a specified number of items can pass the validation rule. (You need to specify the number using 'itemValidationThreshold' option.)
+`exactly` : Exactly a specified number of items must pass the validation rule. (You need to specify the number using 'itemValidationThreshold' option.)
 
+- itemValidationThreshold (number)
+This option is only applied for arrayIterate, setIterate when 'itemValidationMode' is set to 'atLeast', 'atMost', or 'exactly'. It defines the threshold number of items that must pass the validation rule. The default value is 1.
 
 - entryValidationMode ('strict', 'flexible')
-This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. It defines how many entries in the object should pass the validation rule. If it is 'strict' validator will throw error if there is any validation fail. If it is 'flexible' validator will ignore it. The default value is 'strict'.
+This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. If it is 'strict', validator will throw error if there is any undefined key. If it is 'flexible', validator will ignore it. The default value is 'strict'.
 
-- stripUnknown (true, false)
-This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. If it is set as true, validator will remove this element from the refinement. If it is set as false, this element still in the refinement. The default value is false.
+- stripUndefinedKey (true, false)
+This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. If it is set as true, validator will remove undefined keys from the refinement. If it is set as false, this element still in the refinement. The default value is false.
 
 - softFail (true, false)
 This option is applied for all action types. If it is set as true, validator will not throw error even if validation fails. The default value is false.
@@ -133,9 +132,6 @@ This option is applied for all action types. If it is set as true, validator wil
 - strictDateValidation (true, false)
 This option is for date validation methods (dateTime, dateOnly). If it is set as true, validator will perform strict date validation, meaning it will reject invalid dates like February 30. The default value is false.
 
-- minItems
-
-- maxItems
 
 ### Methods
 Data Type Validation

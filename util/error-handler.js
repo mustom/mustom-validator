@@ -20,17 +20,21 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
     }
 
     let errorMessageToSend = errorMessage || 'Validation Error'
+    const inputToString = JSON.stringify(thisObject.input || '')
+    const shortenedInput = inputToString.length > 20 ? `${inputToString.slice(0, 20)}...` : inputToString
 
     if (errorMessageToSend.includes('{{input}}')) {
-        const inputToString = JSON.stringify(thisObject.input)
-        const shortenedInput = inputToString.length > 20 ? `${inputToString.slice(0, 20)}...` : inputToString
         errorMessageToSend = errorMessageToSend.replace('{{input}}', shortenedInput)
     }
 
     if (thisObject.option.softFail) {
         thisObject.errors.push({
+            index: thisObject.index || thisObject.index === 0 ? thisObject.index : null,
             code: errorCode,
-            message: errorMessageToSend
+            message: errorMessageToSend,
+            input: shortenedInput,
+            key: thisObject.key || null,
+            criterion: thisObject.criterion || null
         })
 
         return
