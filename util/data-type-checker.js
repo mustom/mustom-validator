@@ -3,8 +3,10 @@
 
 
 // This function checks the data type of the input value and returns it as a string.
+// 
 // 1. Return values will be one of the following:
 //    'null', 'string', 'boolean', 'number', 'undefined', 'nan', 'array', 'regexp', 'date', 'object', 'map', 'set', 'bigint'
+// 
 // 2. Return 'misc' (for any other types not covered above):
 //    'function', 'symbol', 'error', 'weakmap', 'weakset', etc.
 

@@ -2,17 +2,17 @@
 
 > This version is NOT tested. Please do NOT use this library.
 
-### About This Library
+### 1. About This Library
 This library was made specifically for the Mustom e-commerce platform. Because it's not a general-purpose validation library, it might not be a good fit for your project. You have lots of great options like Joi and Zod, so I'd recommend you skip this one if you're not working on a Mustom project.
 
-### Installation
+### 2. Installation
 Install via NPM
 
 ```
 npm install mustom-validator
 ```
 
-### Usage Examples
+### 3. Usage Examples
 To use the validator, import the `validator` instance and call the desired validation methods. Here is a simple example:
 
 
@@ -51,7 +51,7 @@ validator.objectIterate({
 ```
 
 
-### Action Types
+### 4. Action Types
 Action types define how the validator processes the input data. There are six action types:
 single, objectIterate, arrayObjectIterate, arrayIterate, setIterate, mapIterate.
 
@@ -92,12 +92,11 @@ validator.setIterate(set, rule, options)
 
 ##### MapIterate
 This action type is used to validate each value in a map against specified rules.
-```
-validator.mapIterate(map, rules, options)
+This method is under development and not available yet.
+```validator.mapIterate(map, rules, options)
 ```
 
-
-### Options
+### 5. Options
 There are many options you can use in the validator.
 
 - itemValidationMode ('all', 'any', 'none', 'one', 'atLeast', 'atMost', 'exactly')
@@ -133,7 +132,7 @@ This option is applied for all action types. If it is set as true, validator wil
 This option is for date validation methods (dateTime, dateOnly). If it is set as true, validator will perform strict date validation, meaning it will reject invalid dates like February 30. The default value is false.
 
 
-### Methods
+### 6. Methods
 Data Type Validation
 - `any()`
 - `null()`
@@ -199,7 +198,7 @@ Misc
 - `noRules()`
 
 
-### Data Transformer
+### 8. Data Transformer
 The validator includes data transformer methods that allow you to transform the input value during the validation process.
 You can use data transformer, when you need to transform value.
 The 'refinement' in return value will be changed if you add data transfomer.
@@ -224,10 +223,10 @@ validator.single(' MUSTOM ').string().toLowerCase().trim()
 - `toArray()` 
 
 
-### Return value
+### 9. Return value
 
 
-### Custom Error Object
+### 10. Custom Error Object
 The validator provides a custom error object that contains detailed information about validation failures.
 If input value is not passed validation rule(s), validator will thorow error if 'softFail : true' option is not specified.
 In this case, validator will include the failed validation rules in the custom error object.
@@ -239,7 +238,7 @@ In this case, validator will include the failed validation rules in the custom e
 These errors extend the built-in Error class and provide specific messages for different validation failures.
 
 
-### Additional Utility - Data type checker
+### 11. Additional Utility - Data type checker
 This utility function checks the data type of the input value and returns it as a string.
 
 ```
