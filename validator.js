@@ -22,7 +22,6 @@ const validator = function () {
         entryValidationMode: 'strict', // strict, flexible ==> strict, flexible, forbidExtra, requireAllRules
         stripUndefinedKey: true,
         softFail: false,
-        // ignoreUsageError: true,
         abortEarly: true, // Stop validation on first error if true
         strictDateValidation: false // Strict date validation (e.g., invalid dates like Feb 30)
     }
@@ -102,13 +101,41 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
         this.key = key
 
         const targetRuleDataType = dataTypeChecker(targetRule)
-
-        if (targetRuleDataType === 'object') {
-            this.objectIterate(this.input, targetRule)
-        } else {
+        
+        if (targetRuleDataType === 'function') {
             const itemResult = targetRule()
             newRefinements = { ...newRefinements, [key]: itemResult.refinement }
+            continue
         }
+
+        if (targetRuleDataType === 'object') {
+            const itemResult = this.objectIterate(this.input, targetRule)
+            newRefinements = { ...newRefinements, [key]: itemResult.refinement }
+            continue
+        } 
+        
+        if (targetRuleDataType === 'array' && dataTypeChecker(targetRule[0]) === 'function') {
+            
+            if (!targetRule[0] || dataTypeChecker(targetRule[0]) !== 'function') {
+                errorHandler(this, 'UsageError', `The first element of the rule array should be a function.`)
+            }
+
+            if (targetRule[1] && dataTypeChecker(targetRule[1]) !== 'object') {
+                errorHandler(this, 'UsageError', `The second element of the rule array should be an object.`)
+            }
+
+            const itemResult = this.arrayIterate(this.input, targetRule[0], targetRule[1] || {})
+            newRefinements = { ...newRefinements, [key]: itemResult.refinement }
+            continue
+        }
+
+        if (targetRuleDataType === 'array' && dataTypeChecker(targetRule[0]) === 'object') {
+            const itemResult = this.arrayObjectIterate(this.input, targetRule[0])
+            newRefinements = { ...newRefinements, [key]: itemResult.refinement }
+            continue        
+        }
+        
+        errorHandler(this, 'UsageError', `Invalid rule for key '${key}'.`)
     }
 
     // Check for extra keys in input that are not defined in the rule
@@ -221,8 +248,8 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
         errorHandler(this, 'UsageError', `Invalid itemValidationMode: ${option.itemValidationMode}`)
     }
 
-    if (option.itemValidationThreshold !== undefined && [ 'atLeast', 'atMost', 'exactly' ].includes(option.itemValidationMode) && dataTypeChecker(option.itemValidationThreshold) !== 'number') {
-        errorHandler(this, 'UsageError', `itemValidationThreshold option should be a number.`)
+    if ([ 'atLeast', 'atMost', 'exactly' ].includes(option.itemValidationMode) && dataTypeChecker(option.itemValidationThreshold) !== 'number') {
+        errorHandler(this, 'UsageError', `Invalid itemValidationThreshold`)
     }
 
     const results = input.map((item, index) => {
@@ -344,25 +371,26 @@ validator.prototype.setIterate = function (input, rule, option = {}) {
         errorHandler(this, 'UsageError', `The input set should not be empty.`)
     }
     
-    if (option.itemValidationMode && ![ 'all', 'any', 'none', 'one' ].includes(option.itemValidationMode)) {
+    if (option.itemValidationMode && ![ 'all', 'any', 'none', 'one', 'atLeast', 'atMost', 'exactly' ].includes(option.itemValidationMode)) {
         errorHandler(this, 'UsageError', `Invalid itemValidationMode: ${option.itemValidationMode}`)
     }
 
-    if (option.itemValidationThreshold !== undefined && [ 'atLeast', 'atMost', 'exactly' ].includes(option.itemValidationMode)) {
-        errorHandler(this, 'UsageError', `itemValidationThreshold option is not applicable for Set validation.`)
+    if ([ 'atLeast', 'atMost', 'exactly' ].includes(option.itemValidationMode) && dataTypeChecker(option.itemValidationThreshold) !== 'number') {
+        errorHandler(this, 'UsageError', `Invalid itemValidationThreshold`)
     }
-
 
     // Iterate through each item in the set
     const results = Array.from(input).map((item, index) => {
         this.input = item
-        this.refinement = input
+        this.refinement = item
         this.dataType = dataTypeChecker(item)
         this.index = index
         this.isValid = true
-        this.option = { ...this.option,softFail: true, abortEarly: false, ...option }
+        this.option = { ...this.option, softFail: true, abortEarly: false, ...option }
 
         const result = rule()
+
+        console.log(result.refinement)
 
         return { refinement: result.refinement, isValid: result.isValid, errors: result.errors }
     })
