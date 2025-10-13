@@ -28,8 +28,8 @@ const aa = validator.objectIterate(data, {
     req: () => validator.string()
     }, {
         softFail: true,
-        entryValidationMode: 'strict',
-        stripUnknown: false
+        entryValidationMode: 'flexible',
+        stripUndefinedKey: false
     })
 
 console.log(aa)

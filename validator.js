@@ -92,6 +92,9 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
         if (!target) {
             if ([ 'strict', 'requireAllRules' ].includes(this.option.entryValidationMode)) {
                 errorHandler(this, 'ValidationError', `'${key}' is required.`)
+                continue
+            } else {
+                continue
             }
         }
         
@@ -100,7 +103,7 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
         this.refinement = input[key]
         this.key = key
 
-        const targetRuleDataType = dataTypeChecker(targetRule)
+        const targetRuleDataType = dataTypeChecker(targetRule, { showMisc: true })
         
         if (targetRuleDataType === 'function') {
             const itemResult = targetRule()
@@ -114,13 +117,13 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
             continue
         } 
         
-        if (targetRuleDataType === 'array' && dataTypeChecker(targetRule[0]) === 'function') {
+        if (targetRuleDataType === 'array' && dataTypeChecker(targetRule[0], { showMisc: true }) === 'function') {
             
-            if (!targetRule[0] || dataTypeChecker(targetRule[0]) !== 'function') {
+            if (!targetRule[0] || dataTypeChecker(targetRule[0], { showMisc: true }) !== 'function') {
                 errorHandler(this, 'UsageError', `The first element of the rule array should be a function.`)
             }
 
-            if (targetRule[1] && dataTypeChecker(targetRule[1]) !== 'object') {
+            if (targetRule[1] && dataTypeChecker(targetRule[1], { showMisc: true }) !== 'object') {
                 errorHandler(this, 'UsageError', `The second element of the rule array should be an object.`)
             }
 
@@ -129,7 +132,7 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
             continue
         }
 
-        if (targetRuleDataType === 'array' && dataTypeChecker(targetRule[0]) === 'object') {
+        if (targetRuleDataType === 'array' && dataTypeChecker(targetRule[0], { showMisc: true }) === 'object') {
             const itemResult = this.arrayObjectIterate(this.input, targetRule[0])
             newRefinements = { ...newRefinements, [key]: itemResult.refinement }
             continue        
@@ -470,105 +473,6 @@ validator.prototype.setIterate = function (input, rule, option = {}) {
     this.input = input
     this.dataType = inputDataType
     this.refinement = new Set(newRefinement)
-
-    return this
-}
-
-/** Validate each entry in a map against specified rules.
- */
-validator.prototype.mapIterate = function (input, rule, option = {}) {
-
-    // Map validation is not implemented yet because of its complexity like nested map.
-    errorHandler(this, 'UsageError', `'mapIterate' method is under development and not available yet.`)
-
-    const inputDataType = dataTypeChecker(input)
-    const ruleDataType = dataTypeChecker(rule)
-
-    if (!input) {
-        errorHandler(this, 'UsageError', `The input value is required.`)
-    }
-
-    if (!rule) {
-        errorHandler(this, 'UsageError', `Rule is required.`)
-    }
-
-    if (inputDataType !== 'map') {
-        errorHandler(this, 'UsageError', `'mapIterate' method requires a map.`)
-    }
-
-    if (ruleDataType !== 'object') {
-        errorHandler(this, 'UsageError', `'mapIterate' method requires a object as rule.`)
-    }
-
-    if (!input.size) {
-        errorHandler(this, 'UsageError', `The input map should not be empty.`)
-    }
-
-    if (!Object.keys(rule).length) {
-        errorHandler(this, 'UsageError', `The rule object should not be empty.`)
-    }
-
-    if (option.entryValidationMode && ![ 'strict', 'flexible', 'forbidExtra', 'requireAllRules' ].includes(option.entryValidationMode)) {
-        errorHandler(this, 'UsageError', `Invalid entryValidationMode: ${option.entryValidationMode}`)
-    }
-
-    if (option.stripUndefinedKey !== undefined && dataTypeChecker(option.stripUndefinedKey) !== 'boolean') {
-        errorHandler(this, 'UsageError', `stripUndefinedKey option should be a boolean.`)
-    }
-
-    this.option = { ...this.option, ...option }
-
-    let newRefinements = {}
-
-    for (const key in rule) {
-
-        const target = input.get(key)
-        const targetRule = rule[key]
-
-        console.log(target)
-        console.log(targetRule)
-
-        // Throw error if the key is not defined in the input
-        if (!target) {
-            if ([ 'strict', 'requireAllRules' ].includes(this.option.entryValidationMode)) {
-                errorHandler(this, 'ValidationError', `'${key}' is required.`)
-            }
-        }
-        
-        this.input = input.get(key)
-        this.dataType = dataTypeChecker(this.input)
-        this.refinement = input.get(key)
-        this.key = key
-
-        const targetRuleDataType = dataTypeChecker(targetRule)
-        
-        const itemResult = targetRule()
-        newRefinements = { ...newRefinements, [key]: itemResult.refinement }
-    }
-
-    // Check for extra keys in input that are not defined in the rule
-    for (const [key] of input) {
-
-        const targetRule = rule[key]
-
-        if (!targetRule) {
-
-            if ([ 'strict', 'forbidExtra' ].includes(this.option.entryValidationMode)) {
-                errorHandler(this, 'ValidationError', `'${key}' is unknown field.`)
-            }
-
-            if ([ 'flexible', 'requireAllRules' ].includes(this.option.entryValidationMode) && this.option.stripUndefinedKey === false) {
-                newRefinements = { ...newRefinements, [key]: input[key] }
-            }
-        }
-    }
-
-    // Remove this.key, this.criterion after validation
-    delete this.key
-    delete this.criterion
-    this.dataType = inputDataType
-    this.input = input
-    this.refinement = newRefinements
 
     return this
 }

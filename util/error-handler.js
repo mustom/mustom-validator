@@ -30,10 +30,10 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
     if (thisObject.option.softFail) {
         thisObject.errors.push({
             index: thisObject.index || thisObject.index === 0 ? thisObject.index : null,
+            key: thisObject.key || null,
             code: errorCode,
             message: errorMessageToSend,
             input: shortenedInput,
-            key: thisObject.key || null,
             criterion: thisObject.criterion || null
         })
 

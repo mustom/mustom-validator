@@ -1,12 +1,10 @@
 <h4 align="center">MUSTOM, More Than Custom</h4>
 
-> This version is NOT tested. Please do NOT use this library.
-
 ## About This Library
-This library was made specifically for the Mustom e-commerce platform. Because it's not a general-purpose validation library, it might not be a good fit for your project. You have lots of great options like Joi and Zod, so I'd recommend you skip this one if you're not working on a Mustom project.
+This library was made specifically for the Mustom e-commerce platform. It provides a comprehensive set of validation methods to ensure data integrity and consistency across various use cases. The library is designed to be flexible and extensible, allowing developers to easily add custom validation rules as needed.
 
 ## Installation
-Install via NPM
+Installation via NPM
 
 ```
 npm install mustom-validator
@@ -15,85 +13,88 @@ npm install mustom-validator
 ## Usage Examples
 To use the validator, import the `validator` instance and call the desired validation methods. Here is a simple example:
 
-
-CommonJS
+Importing in CommonJS
 ```
 const { Validator } = require('mustom-validator')
 ```
 
-
-ES Modules
+Importing in ES Modules
 ```
 import { Validator } from 'mustom-validator'
 ```
 
+Validate single value
 ```
-# Validate single value
 validator.single(23).naturalNumber().maxValue(100).notEmpty()
 ```
 
+Validate single value with options
 ```
-# Validate single value with options
 validator.single(23, { softFail: true }).string().required()
-```
 
 ```
-# Validate object
-validator.objectIterate({
+Validate array
+```
+validator.arrayIterate([1, 2, '3'],
+    { () => validator.number().minValue(2) },
+    { itemValidationMode: 'any' }
+)
+```
+
+Validate object
+```
+const input = {
     name: 'John Doe',
     age: 30,
-    email: 'john.doe@example.com'
-}, {
+    email: 'john.doe@example.com',
+    username: 'johndoe'
+}
+
+
+validator.objectIterate(input, {
     name: () => validator.string().minLength(3).maxLength(50).notEmpty().required(),
     age: () => validator.naturalNumber().minValue(0).maxValue(120).required(),
     email: () => validator.email().notEmpty().required()
-}, { mode: 'strict', stripUnknown: true })
+}, { entryValidationMode: 'strict', stripUndefinedKey: true })
 ```
 
-
 ## Action Types
-Action types define how the validator processes the input data. There are six action types:
-single, objectIterate, arrayObjectIterate, arrayIterate, setIterate, mapIterate.
+Action types define how the validator processes the input data. There are five action types:
 
+`single` `objectIterate` `arrayObjectIterate` `arrayIterate` `setIterate`
 
-##### Single
+#### Single
 This action type is used to validate a single value.
 
 ```
-validator.single(value, options)
+validator.single(input, options).method()...
 ```
 
 
-##### ObjectIterate
+#### ObjectIterate
 This action type is used to validate each property of an object against specified rules.
 
 ```
-validator.objectIterate(object, rules, options)
+validator.objectIterate(input, rules, options)
 ```
 
-##### ArrayObjectIterate
+#### ArrayObjectIterate
 This action type is used to validate each object in an array against specified rules.
 
 ```
-validator.arrayObjectIterate(arrayOfObjects, rules, options)
+validator.arrayObjectIterate(input, rules, options)
 ```
 
-##### ArrayIterate
+#### ArrayIterate
 This action type is used to validate each item in an array against a specified rule.
 ```
-validator.arrayIterate(array, rule, options)
+validator.arrayIterate(input, rule, options)
 ```
 
-##### SetIterate
+#### SetIterate
 This action type is used to validate each item in a set against a specified rule.
 ```
-validator.setIterate(set, rule, options)
-```
-
-##### MapIterate
-This action type is used to validate each value in a map against specified rules.
-This method is under development and not available yet.
-```validator.mapIterate(map, rules, options)
+validator.setIterate(input, rule, options)
 ```
 
 ## Options
@@ -115,10 +116,10 @@ This option is only applied for arrayIterate, setIterate. It defines how many it
 This option is only applied for arrayIterate, setIterate when 'itemValidationMode' is set to 'atLeast', 'atMost', or 'exactly'. It defines the threshold number of items that must pass the validation rule. The default value is 1.
 
 #### entryValidationMode ('strict', 'flexible')
-This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. If it is 'strict', validator will throw error if there is any undefined key. If it is 'flexible', validator will ignore it. The default value is 'strict'.
+This option is only applied for objectIterable, and arrayObjectIterate. If it is 'strict', validator will throw error if there is any undefined key. If it is 'flexible', validator will ignore it. The default value is 'strict'.
 
 #### stripUndefinedKey (true, false)
-This option is only applied for objectIterable, mapIterate, and arrayObjectIterate. If it is set as true, validator will remove undefined keys from the refinement. If it is set as false, this element still in the refinement. The default value is false.
+This option is only applied for objectIterable, and arrayObjectIterate. If it is set as true, validator will remove undefined keys from the refinement. If it is set as false, this element still in the refinement. The default value is false.
 
 #### softFail (true, false)
 This option is applied for all action types. If it is set as true, validator will not throw error even if validation fails. The default value is false.
@@ -197,30 +198,31 @@ This option is for date validation methods (dateTime, dateOnly). If it is set as
 - `gridOption()`
 - `noRules()`
 
-
 ## Data Transformer
 The validator includes data transformer methods that allow you to transform the input value during the validation process.
 You can use data transformer, when you need to transform value.
 The 'refinement' in return value will be changed if you add data transfomer.
 And, if you add it in the middle of method, the value also changed. So, validation methods after the transformer will be applied to the transformed value.
 
+
+Example 1 : Transform 'mustom' to 'MUSTOM'. It will pass validation. 
 ```
-// Example 1 : Transform 'mustom' to 'MUSTOM'. It will pass validation. 
 validator.single('mustom').string().toUpperCase().uppercase()
 // output : 'MUSTOM'
+```
 
-
-// Example 2 : Change ' MUSTOM ' to lower case, and trim.
+Example 2 : Change ' MUSTOM ' to lower case, and trim.
+```
 validator.single(' MUSTOM ').string().toLowerCase().trim()
 // output : 'mustom'
 ```
 
-- `trim()` Trim string
-- `toLowerCase()` 
-- `toUpperCase()`
-- `toString()` Change to string. (Number, or array will)
-- `toNumber()` Change number (Only applied to )
-- `toArray()` 
+- `trim()` Trim string (remove whitespace from both ends of a string)
+- `toLowerCase()` Change to lower case.
+- `toUpperCase()` Change to upper case.
+- `toString()` Change to string. (Number, or array will be converted to string)
+- `toNumber()` Change to number (Only applied to string that can be converted to number)
+- `toArray()` Change to array.
 
 
 ## Return value
@@ -260,12 +262,13 @@ console.log(dataType4) // Return 'array'
 ```
 
 Return values will be one of the following:
+
 `null`, `string`, `boolean`, `number`, `undefined`, `nan`, `array`, `regexp`, `date`, `object`, `map`, `set`, `bigint`
 
 Return `misc` (for any other types not covered above):
 function, symbol, error, weakmap, weakset, etc.
 
-> If you set the option 'showMisc' as true, it will return exact type of 'misc'.
+> If you set the second argument 'showMisc' as true, it will return exact type of 'misc'.
 
 ### License
 This library is under AGPL v3 Licensed. (It is same as the license of Mustom)
