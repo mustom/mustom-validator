@@ -181,9 +181,13 @@ validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
     if (!rule) {
         errorHandler(this, 'UsageError', `Rule is required.`)
     }
+    
+    if (!input.length) {
+        errorHandler(this, 'UsageError', `The input array should not be empty.`)
+    }
 
-    if (inputDataType !== 'array') {
-        errorHandler(this, 'UsageError', `'arrayObjectIterate' method requires an array.`)
+    if (inputDataType !== 'array' || dataTypeChecker(input[0]) !== 'object') {
+        errorHandler(this, 'UsageError', `'arrayObjectIterate' method requires an array of objects.`)
     }
 
     if (ruleDataType !== 'object') {
@@ -194,28 +198,23 @@ validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
         )
     }
 
-    if (!input.length) {
-        errorHandler(this, 'UsageError', `The input array should not be empty.`)
-    }
-
     if (!Object.keys(rule).length) {
         errorHandler(this, 'UsageError', `The rule object should not be empty.`)
     }
 
 
-    this.input = input
-    this.refinement = input
     this.option = { ...this.option, ...option }
-    
-    const result = this.arrayIterate(input, () => {
-        this.objectIterate(this.input, rule, this.option)
-    })
-    
-    this.input = result.input
+    let newRefinements = []
+
+    for (const [index, item] of input.entries()) {
+        this.index = index
+        const result = this.objectIterate(item, rule, this.option)
+        newRefinements.push(result.refinement)
+    }
+
+    this.input = input
     this.dataType = 'arrayObject'
-    this.refinement = result.refinement
-    this.isValid = result.isValid
-    this.errors = result.errors
+    this.refinement = newRefinements
 
     return this
 }
@@ -236,7 +235,7 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
     }
 
     if (inputDataType !== 'array') {
-        errorHandler(this, 'UsageError', `'arrayIterate' method requires an array.`)
+        errorHandler(this, 'ValidationError', `Input should be an array.`)
     }
 
     if (ruleDataType !== 'function') {
