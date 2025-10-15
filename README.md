@@ -116,10 +116,10 @@ This option is only applied for arrayIterate, setIterate. It defines how many it
 This option is only applied for arrayIterate, setIterate when 'itemValidationMode' is set to 'atLeast', 'atMost', or 'exactly'. It defines the threshold number of items that must pass the validation rule. The default value is 1.
 
 #### entryValidationMode ('strict', 'flexible')
-This option is only applied for objectIterable, and arrayObjectIterate. If it is 'strict', validator will throw error if there is any undefined key. If it is 'flexible', validator will ignore it. The default value is 'strict'.
+This option is only applied for objectIterable, and arrayObjectIterate. If it is 'strict', validator will throw error if there is any key that is not defined in the rules. If it is 'flexible', validator will ignore any extra keys that are not defined in the rules. The default value is 'strict'.
 
 #### stripUndefinedKey (true, false)
-This option is only applied for objectIterable, and arrayObjectIterate. If it is set as true, validator will remove undefined keys from the refinement. If it is set as false, this element still in the refinement. The default value is false.
+This option is only applied for objectIterable, and arrayObjectIterate. If it is set as true, validator will remove keys from the refinement that are not defined in the rules. If it is set as false, this element still in the refinement. The default value is false.
 
 #### softFail (true, false)
 This option is applied for all action types. If it is set as true, validator will not throw error even if validation fails. The default value is false.

@@ -19,6 +19,11 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
         throw new BaseError(errorCode, errorMessage)
     }
 
+    // Abort early if configured to do so
+    if (thisObject.option.softFail && thisObject.option.abortEarly && thisObject.errors.length > 0) {
+        return
+    }
+
     let errorMessageToSend = errorMessage || 'Validation Error'
     const inputToString = JSON.stringify(thisObject.input || '')
     const shortenedInput = inputToString.length > 20 ? `${inputToString.slice(0, 20)}...` : inputToString
