@@ -188,7 +188,7 @@ This option is for date validation methods (dateTime, dateOnly). If it is set as
 - `required()`
 - `notEmpty()`
 - `noWhitespace()`
-- `notDuplicate()`
+- `notDuplicated()`
 
 #### RegEx Validation
 - `regexTrue(regex)`

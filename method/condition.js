@@ -118,22 +118,22 @@ const condition = {
      * Checks if the array contains duplicate items.
      * It only works when the data type is 'array'.
      */
-    notDuplicate: function () {
+    notDuplicated: function () {
 
-        this.criterion = 'notDuplicate'
+        this.criterion = 'notDuplicated'
         
         if (this.input === undefined) {
             return this
         }
 
         if (this.dataType !== 'array') {
-            errorHandler(this, 'ValidationError', `'notDuplicate' method is only available for array type.`)
+            errorHandler(this, 'ValidationError', `'notDuplicated' method is only available for array type.`)
         }
 
         const uniqueItems = new Set(this.input)
         
         if (uniqueItems.size !== this.input.length) {
-            errorHandler(this, 'ValidationError', `The value has duplicate items.`)
+            errorHandler(this, 'ValidationError', `The value has duplicated items.`)
         }
 
         return this

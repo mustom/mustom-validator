@@ -12,6 +12,7 @@ const comparison = {
     is: function (expected) {
 
         this.criterion = 'is'
+        this.argument = expected
 
         if (this.input === undefined) {
             return this
@@ -30,6 +31,7 @@ const comparison = {
     isNot: function (expected) {
 
         this.criterion = 'isNot'
+        this.argument = expected
 
         if (this.input === undefined) {
             return this
@@ -48,6 +50,7 @@ const comparison = {
     minValue: function (limit) {
 
         this.criterion = 'minValue'
+        this.argument = limit
 
         if (this.input === undefined) {
             return this
@@ -74,6 +77,7 @@ const comparison = {
     maxValue: function (limit) {
 
         this.criterion = 'maxValue'
+        this.argument = limit
 
         if (this.input === undefined) {
             return this
@@ -100,6 +104,7 @@ const comparison = {
     in: function (list) {
 
         this.criterion = 'in'
+        this.argument = list
 
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(list)) {
@@ -127,6 +132,7 @@ const comparison = {
     notIn: function (list) {
 
         this.criterion = 'notIn'
+        this.argument = list
 
         // Since this is an usage error (not a validation error), the error will not be handled, even if 'softFail' is set to true.
         if (!Array.isArray(list)) {
@@ -154,6 +160,7 @@ const comparison = {
     exactLength: function (expected) {
 
         this.criterion = 'exactLength'
+        this.argument = expected
 
         if (this.input === undefined) {
             return this
@@ -178,6 +185,7 @@ const comparison = {
     minLength: function (expected) {
 
         this.criterion = 'minLength'
+        this.argument = expected
 
         if (this.input === undefined) {
             return this
@@ -202,6 +210,7 @@ const comparison = {
     maxLength: function (expected) {
 
         this.criterion = 'maxLength'
+        this.argument = expected
         
         if (this.input === undefined) {
             return this

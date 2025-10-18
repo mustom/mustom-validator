@@ -13,6 +13,7 @@ const regex = {
     regexTrue: function (regex) {
 
         this.criterion = 'regexTrue'
+        this.argument = regex.toString()
 
         if (this.input === undefined) {
             return this
@@ -40,6 +41,7 @@ const regex = {
     regexFalse: function (regex) {
 
         this.criterion = 'regexFalse'
+        this.argument = regex.toString()
         
         if (this.input === undefined) {
             return this

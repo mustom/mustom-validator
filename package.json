@@ -1,7 +1,7 @@
 {
     "name": "mustom-validator",
-    "version": "0.0.8",
-    "description": "A validation library for the Mustom project",
+    "version": "0.0.9",
+    "description": "Lightweight yet powerful, highly extensible validation/sanitization library",
     "homepage": "https://mustom.com",
     "bugs": {
         "url": "https://github.com/mustom/mustom-validator/issues"
@@ -23,5 +23,17 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
-    }
+    },
+    "keywords": [
+        "validator",
+        "validation",
+        "validate",
+        "sanitization",
+        "sanitizes",
+        "sanitisation",
+        "sanitise",
+        "schema",
+        "type",
+        "mustom"
+    ]
 }

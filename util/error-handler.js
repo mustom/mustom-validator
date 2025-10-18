@@ -39,6 +39,7 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
             code: errorCode,
             message: errorMessageToSend,
             input: shortenedInput,
+            argument: thisObject.argument || null,
             criterion: thisObject.criterion || null
         })
 

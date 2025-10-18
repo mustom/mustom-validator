@@ -12,6 +12,7 @@ const { dataTypeChecker } = require('./util/data-type-checker.js')
 
 const validator = function () {
     this.input = null
+    this.argument = null
     this.refinement = null
     this.dataType = null
     this.errors = []
@@ -157,9 +158,10 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
         }
     }
 
-    // Remove this.key, this.criterion after validation
+    // Remove unused properties after validation
     delete this.key
     delete this.criterion
+    delete this.argument
     this.dataType = inputDataType
     this.input = input
     this.refinement = newRefinements
@@ -211,6 +213,10 @@ validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
         newRefinements.push(result.refinement)
     }
 
+    // Remove unused properties after validation
+    delete this.index
+    delete this.criterion
+    delete this.argument
     this.input = input
     this.dataType = 'arrayObject'
     this.refinement = newRefinements
@@ -353,10 +359,11 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
                 `Invalid itemValidationMode: ${this.option.itemValidationMode}`
             )
     }
-    
-    // Remove this.index, this.criterion after validation
+
+    // Remove unused properties after validation
     delete this.index
     delete this.criterion
+    delete this.argument
     this.input = input
     this.dataType = inputDataType
     this.refinement = newRefinement
@@ -484,9 +491,10 @@ validator.prototype.setIterate = function (input, rule, option = {}) {
             )
     }
     
-    // Remove this.index, this.criterion after validation
+    // Remove unused properties after validation
     delete this.index
     delete this.criterion
+    delete this.argument
     this.input = input
     this.dataType = inputDataType
     this.refinement = new Set(newRefinement)
