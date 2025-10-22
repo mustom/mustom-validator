@@ -1,12 +1,14 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const { validator } = require('./validator.js')
-const { dataTypeChecker } = require('./util/data-type-checker.js')
+const { validator } = require('./validator')
+const { dataTypeChecker } = require('./util/data-type-checker')
+const { withValidation } = require('./util/first-line-validator')
 
 
 module.exports = {
     validator,
-    dataTypeChecker
+    dataTypeChecker,
+    withValidation
 }
 

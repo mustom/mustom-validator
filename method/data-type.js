@@ -9,7 +9,6 @@ const dataType = {
     any: function () {
         return this
     },
-
     null: function () {
 
         this.criterion = 'null'
@@ -23,7 +22,6 @@ const dataType = {
 
         return this
     },
-
     undefined: function () {
         this.criterion = 'undefined'
 
@@ -35,7 +33,6 @@ const dataType = {
 
         return this
     },
-
     nan: function () {
 
         this.criterion = 'nan'
@@ -50,7 +47,6 @@ const dataType = {
 
         return this
     },
-
     map: function () {
 
         this.criterion = 'map'

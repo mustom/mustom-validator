@@ -1,4 +1,9 @@
-<h4 align="center">MUSTOM, More Than Custom</h4>
+<p align="center">
+    <a href="https://mustom.com">
+        <img src="./mustom.svg" height="80">
+        <h4 align="center">MUSTOM, More Than Custom</h4>
+    </a>
+</p>
 
 ## About This Library
 This library was made specifically for the Mustom e-commerce platform. It provides a comprehensive set of validation methods to ensure data integrity and consistency across various use cases. The library is designed to be flexible and extensible, allowing developers to easily add custom validation rules as needed.

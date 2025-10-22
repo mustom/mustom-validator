@@ -6,34 +6,34 @@ const { validator } = require('./index.js')
 
 
 // TEST objectIterate
-const data = {
-    aa: '123a',
-    bb: [1, 2, 3],
-    cc: {zz: 11, yy: 'hello'},
-    dd: {
-        xx: 'world',
-        yy: 456
-    },
-    zz: 'extra'
-}
+// const data = {
+//     aa: '123a',
+//     bb: [1, 2, 3],
+//     cc: {zz: 11, yy: 'hello'},
+//     dd: {
+//         xx: 'world',
+//         yy: 456
+//     },
+//     zz: 'extra'
+// }
 
-const aa = validator.objectIterate(data, {
-    aa: () => validator.number().required().toString(),
-    bb: [ () => validator.string().toString().required(), { itemValidationMode: 'any', softFail: true, abortEarly: true }],
-    dd: {
-        xx: () => validator.number().required(),
-        yy: () => validator.string().required()
-    },
-    cc: () => validator.boolean().required(),
-    req: () => validator.string().required()
-    }, {
-        softFail: true,
-        abortEarly: false,
-        entryValidationMode: 'flexible',
-        stripUndefinedKey: false
-    })
+// const aa = validator.objectIterate(data, {
+//     aa: () => validator.number().required().toString(),
+//     bb: [ () => validator.string().toString().required(), { itemValidationMode: 'any', softFail: true, abortEarly: true }],
+//     dd: {
+//         xx: () => validator.number().required(),
+//         yy: () => validator.string().required()
+//     },
+//     cc: () => validator.boolean().required(),
+//     req: () => validator.string().required()
+//     }, {
+//         softFail: true,
+//         abortEarly: false,
+//         entryValidationMode: 'flexible',
+//         stripUndefinedKey: false
+//     })
 
-console.log(aa)
+// console.log(aa)
 
 
 
@@ -51,51 +51,51 @@ console.log(aa)
 
 
 // TEST arrayObjectIterate
-// const data = [{
-//     aa: '123a',
-//     bb: [1, 2, 3],
-//     cc: {zz: 11, yy: 'hello'},
-//     dd: {
-//         xx: 'world',
-//         yy: 456
-//     },
-//     zz: 'extra'
-// },{
-//     aa: 12345,
-//     bb: [1, 2, 3],
-//     cc: {zz: 11, yy: 'hello'},
-//     dd: {
-//         xx: 'world',
-//         yy: 456
-//     },
-//     zz: 'extra'
-// },{
-//     aa: '123a',
-//     bb: [1, 2, 3],
-//     cc: {zz: 11, yy: 'hello'},
-//     dd: {
-//         xx: 'world',
-//         yy: 456
-//     },
-//     zz: 'extra'
-// }
-// ]
+const data = [{
+    aa: '123a',
+    bb: [1, 2, 3],
+    cc: {zz: 11, yy: 'hello'},
+    dd: {
+        xx: 'world',
+        yy: 456
+    },
+    zz: 'extra'
+},{
+    aa: 12345,
+    bb: [1, 2, 3],
+    cc: {zz: 11, yy: 'hello'},
+    dd: {
+        xx: 'world',
+        yy: 456
+    },
+    zz: 'extra'
+},{
+    aa: '123a',
+    bb: [1, 2, 3],
+    cc: {zz: 11, yy: 'hello'},
+    dd: {
+        xx: 'world',
+        yy: 456
+    },
+    zz: 'extra'
+}
+]
 
-// const aa = validator.arrayObjectIterate(data, {
-//     aa: () => validator.number().required().toString(),
-//     bb: [ () => validator.string().toString().required(), { itemValidationMode: 'any', softFail: true, abortEarly: true }],
-//     dd: {
-//         xx: () => validator.number().required(),
-//         yy: () => validator.string().required()
-//     },
-//     cc: () => validator.boolean().required(),
-//     req: () => validator.string()
-//     }, {
-//         softFail: true,
-//         entryValidationMode: 'flexible',
-//         stripUndefinedKey: false
-//     })
+const aa = validator.arrayObjectIterate(data, {
+    aa: () => validator.number().required().toString(),
+    bb: [ () => validator.string().toString().required(), { itemValidationMode: 'any', softFail: true, abortEarly: true }],
+    dd: {
+        xx: () => validator.number().required(),
+        yy: () => validator.string().required()
+    },
+    cc: () => validator.boolean().required(),
+    req: () => validator.string()
+    }, {
+        softFail: true,
+        entryValidationMode: 'flexible',
+        stripUndefinedKey: false
+    })
 
-// console.log(aa)
+console.log(aa)
 
 
