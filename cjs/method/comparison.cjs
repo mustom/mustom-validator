@@ -1,12 +1,11 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const { errorHandler } = require('../util/error-handler')
-
+const { errorHandler } = require('../error-handling/error-handler.cjs')
 
 const comparison = {
     /**
-     * Checks if the input is equal to the expected value.
+     * @description Checks if the input is equal to the expected value.
      * @param {*} expected - The expected value.
      */
     is: function (expected) {
@@ -25,7 +24,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the input is not equal to the expected value.
+     * @description Checks if the input is not equal to the expected value.
      * @param {*} expected - The expected value.
      */
     isNot: function (expected) {
@@ -44,7 +43,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the input is greater than or equal to the limit.
+     * @description Checks if the input is greater than or equal to the limit.
      * @param {number} limit - The minimum value.
      */
     minValue: function (limit) {
@@ -71,7 +70,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the input is less than or equal to the limit.
+     * @description Checks if the input is less than or equal to the limit.
      * @param {number} limit - The maximum value.
      */
     maxValue: function (limit) {
@@ -98,7 +97,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the input is included in the list array.
+     * @description Checks if the input is included in the list array.
      * @param {Array} list - The array to compare against.
      */
     in: function (list) {
@@ -126,7 +125,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the input is not included in the list array.
+     * @description Checks if the input is not included in the list array.
      * @param {Array} list - The array to compare against.
      */
     notIn: function (list) {
@@ -154,7 +153,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the length of the input is exactly equal to the expected length.
+     * @description Checks if the length of the input is exactly equal to the expected length.
      * @param {number} expected - The expected length.
      */
     exactLength: function (expected) {
@@ -179,7 +178,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the length of the input is greater than or equal to the expected length.
+     * @description Checks if the length of the input is greater than or equal to the expected length.
      * @param {number} expected - The expected minimum length.
      */
     minLength: function (expected) {
@@ -204,7 +203,7 @@ const comparison = {
         return this
     },
     /**
-     * Checks if the length of the input is less than or equal to the expected length.
+     * @description Checks if the length of the input is less than or equal to the expected length.
      * @param {number} expected - The expected maximum length.
      */
     maxLength: function (expected) {
@@ -229,7 +228,6 @@ const comparison = {
         return this
     }
 }
-
 
 const calculateLength = (input, dataType) => {
     if (['string', 'array'].includes(dataType)) {

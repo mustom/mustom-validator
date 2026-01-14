@@ -1,14 +1,14 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const { errorHandler } = require('../util/error-handler')
-const { dataTypeChecker } = require('../util/data-type-checker')
+import { errorHandler } from '../error-handling/error-handler.mjs'
+import { dataTypeChecker } from '../util/data-type-checker.mjs'
 
 const regex = {
     /**
-     * Validate the input value with the given regular expression.
-     * If the input value matches the regex, it passes the validation.
-     * If it does not match, a ValidationError is thrown.
+     * @description Validates the input value against the given regular expression.
+     * @note If the input value matches the regex, it passes the validation.
+     * @note If it does not match, a ValidationError is thrown.
      */
     regexTrue: function (regex) {
 
@@ -34,12 +34,11 @@ const regex = {
         return this
     },
     /**
-     * Validate the input value with the given regular expression.
-     * If the input value does not match the regex, it passes the validation.
-     * If it matches, a ValidationError is thrown.
+     * @description Validates the input value against the given regular expression.
+     * @note If the input value does not match the regex, it passes the validation.
+     * @note If it matches, a ValidationError is thrown.
      */
     regexFalse: function (regex) {
-
         this.criterion = 'regexFalse'
         this.argument = regex.toString()
         
@@ -63,4 +62,4 @@ const regex = {
     }
 }
 
-module.exports = regex
+export default regex

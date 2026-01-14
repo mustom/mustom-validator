@@ -1,13 +1,16 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const {
+import {
     BaseError,
     ValidationError,
     UsageError
-} = require('../error/custom-error')
+} from './custom-error.mjs'
 
-const errorHandler = (thisObject, errorCode, errorMessage) => {
+/**
+ * @description Error handler
+ */
+export const errorHandler = (thisObject, errorCode, errorMessage) => {
 
     thisObject.isValid = false
 
@@ -48,5 +51,3 @@ const errorHandler = (thisObject, errorCode, errorMessage) => {
 
     throw new ValidationError(errorCode, errorMessageToSend)
 }
-
-module.exports = { errorHandler }

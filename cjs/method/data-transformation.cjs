@@ -1,12 +1,12 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const { dataTypeChecker } = require('../util/data-type-checker')
+const { dataTypeChecker } = require('../util/data-type-checker.cjs')
 
 const dataTransformation = {
     /**
-     * Transform data by trimming whitespace from strings. 
-     * If the data is an array, object, or Set, it will trim each string element.
+     * @description Transform data by trimming whitespace from strings. 
+     * @note If the data is an array, object, or Set, it will trim each string element.
      */
     trim: function () {
 
@@ -51,9 +51,9 @@ const dataTransformation = {
         return this
     },
     /**
-     * Transform data by converting a string element to lowercase.
-     * If the data is an array, object, or Set, it will convert each string element to lowercase.
-     * If the data is not a string, and it is not iterable, the refinement will remain unchanged.
+     * @description Transform data by converting a string element to lowercase.
+     * @note If the data is an array, object, or Set, it will convert each string element to lowercase.
+     * @note If the data is not a string, and it is not iterable, the refinement will remain unchanged.
      */
     toLowerCase: function () {
 
@@ -98,9 +98,9 @@ const dataTransformation = {
         return this
     },
     /**
-     * Transform data by converting a string element to uppercase.
-     * If the data is an array, object, or Set, it will convert each string element to uppercase.
-     * If the data is not a string, and it is not iterable, the refinement will remain unchanged.
+     * @description Transform data by converting a string element to uppercase.
+     * @note If the data is an array, object, or Set, it will convert each string element to uppercase.
+     * @note If the data is not a string, and it is not iterable, the refinement will remain unchanged.
      */
     toUpperCase: function () {
 
@@ -144,8 +144,8 @@ const dataTransformation = {
         return this
     },
     /**
-     * Transform data to a string if it is not already a string.
-     * If the data is an array, object, or Set, it will convert each element to a string.
+     * @description Transform data to a string if it is not already a string.
+     * @note If the data is an array, object, or Set, it will convert each element to a string.
      */
     toString: function () {
         if (this.refinement === null || this.refinement === undefined) {
@@ -191,9 +191,9 @@ const dataTransformation = {
         return this
     },
     /**
-     * Transform data to a number if it is not a number.
-     * If the data is an array, object, or Set, it will convert each element to a number.
-     * Please note that this method will convert non-numeric strings to NaN.
+     * @description Transform data to a number if it is not a number.
+     * @note If the data is an array, object, or Set, it will convert each element to a number.
+     * @note Please note that this method will convert non-numeric strings to NaN.
      */
     toNumber: function () {
 
@@ -242,10 +242,10 @@ const dataTransformation = {
         return this
     },
     /**
-     * Transform data to an array if it is string, object, or Set.
-     * If the data is a string, it will be split by commas into an array.
-     * If the data is an object, it will convert the object's values into an array.
-     * If the data is a Set, it will convert the Set into an array.
+     * @description Transform data to an array if it is string, object, or Set.
+     * @note If the data is a string, it will be split by commas into an array.
+     * @note If the data is an object, it will convert the object's values into an array.
+     * @note If the data is a Set, it will convert the Set into an array.
      */
     toArray: function () {
 
@@ -270,6 +270,5 @@ const dataTransformation = {
         return this
     }
 }
-
 
 module.exports = dataTransformation

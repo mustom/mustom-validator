@@ -1,7 +1,10 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-class BaseError extends Error {
+/**
+ * @description Custom error class
+ */
+export class BaseError extends Error {
     constructor(code, message, options = {}) {
         super(message)        
 
@@ -26,7 +29,7 @@ class BaseError extends Error {
         }
     }
 }
-class ValidationError extends BaseError {
+export class ValidationError extends BaseError {
     constructor(code, message, options = {}) {
         super(code, message, options)
         this.name = 'ValidationError'
@@ -34,15 +37,9 @@ class ValidationError extends BaseError {
     }
 }
 
-class UsageError extends BaseError {
+export class UsageError extends BaseError {
     constructor(code, message, options = {}) {
         super(code, message, options)
         this.name = 'UsageError'
     }
 }
-
-module.exports = { 
-    BaseError, 
-    ValidationError, 
-    UsageError
- }

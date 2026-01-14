@@ -1,13 +1,13 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const { errorHandler } = require('../util/error-handler')
-const { dataTypeChecker } = require('../util/data-type-checker')
+import { errorHandler } from '../error-handling/error-handler.mjs'
+import { dataTypeChecker } from '../util/data-type-checker.mjs'
 
 const misc = {
     /**
-     * Validates grid options for data retrieval.
-     * It used to validate Mustom admin panel grid options.
+     * @description Validates grid options for data retrieval.
+     * @note Special validation method dedicated to the Mustom admin panel.
      */
     gridOption: function () {
 
@@ -73,11 +73,38 @@ const misc = {
         return this
     },
     /**
-     * Specifies that no validation rules are applied to the input data.
+     * @description Specifies that no validation rules are applied to the input data.
      */
     noRules: function () {
+        return this
+    },
+    /**
+     * @description Force-sets a specific value.
+     */
+    setValue: function (value) {
+
+        const valueDataType = dataTypeChecker(value)
+
+        if (valueDataType === 'undefined') {
+            errorHandler(this, 'UsageError', `The value is missing.`)
+        }
+
+        this.refinement = value
+        return this
+    },
+    /**
+     * @description Force-sets specific value if given value is undefined.
+     */
+    setValueForUndefined: function (value) {
+
+        const valueDataType = dataTypeChecker(value)
+
+        if (valueDataType === 'undefined') {
+            this.refinement = value
+        }
+
         return this
     }
 }
 
-module.exports = misc
+export default misc

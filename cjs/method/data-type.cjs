@@ -1,14 +1,19 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-
-const { errorHandler } = require('../util/error-handler')
-const { dataTypeChecker } = require('../util/data-type-checker')
+const { errorHandler } = require('../error-handling/error-handler.cjs')
+const { dataTypeChecker } = require('../util/data-type-checker.cjs')
 
 const dataType = {
+    /**
+     * @description Allow all data types
+     */
     any: function () {
         return this
     },
+    /**
+     * @description Validates that the value is `null`.
+     */
     null: function () {
 
         this.criterion = 'null'
@@ -22,6 +27,9 @@ const dataType = {
 
         return this
     },
+    /**
+     * @description Validates that the value is `undefined`.
+     */
     undefined: function () {
         this.criterion = 'undefined'
 
@@ -33,6 +41,9 @@ const dataType = {
 
         return this
     },
+    /**
+     * @description Validates that the value is `NaN`.
+     */
     nan: function () {
 
         this.criterion = 'nan'
@@ -47,6 +58,9 @@ const dataType = {
 
         return this
     },
+    /**
+     * @description Validates that the value is of type `Map`.
+     */
     map: function () {
 
         this.criterion = 'map'
@@ -61,7 +75,9 @@ const dataType = {
 
         return this
     },
-
+    /**
+     * @description Validates that the value is of type `Set`.
+     */
     set: function () {
 
         this.criterion = 'set'
@@ -76,7 +92,9 @@ const dataType = {
 
         return this
     },
-
+    /**
+     * @description Validates that the value is of type `BigInt`.
+     */
     bigInt: function () {
 
         this.criterion = 'bigint'
@@ -91,7 +109,9 @@ const dataType = {
 
         return this
     },
-
+    /**
+     * @description Validates that the value is of type `Function`.
+     */
     function: function () {
 
         this.criterion = 'function'
@@ -106,7 +126,9 @@ const dataType = {
 
         return this
     },
-
+    /**
+     * @description Validates that the value is of type `Symbol`.
+     */
     symbol: function () {
 
         this.criterion = 'symbol'
@@ -122,7 +144,9 @@ const dataType = {
         return this
 
     },
-
+    /**
+     * @description Validates that the value is of type `RegExp`.
+     */
     regexp: function () {
 
         this.criterion = 'regexp'
@@ -138,10 +162,7 @@ const dataType = {
         return this
     },
     /**
-     * Checks if the input is an object.
-     * @example
-     * validator.single({ key: 'value' }).object() // Passes
-     * validator.single([1, 2, 3]).object() // Throws an error
+     * @description Validates that the value is of type `Object`.
      */
     object: function () {
 
@@ -158,7 +179,7 @@ const dataType = {
         return this
     },
     /**
-     * Checks if the input is an array of objects.
+     * @description Validate that the value is an `array of objects`.
      * @example
      * validator.single([{ key: 'value' }]).arrayOfObject() // Passes
      * validator.single([1, 2, 3]).arrayOfObject() // Throws an error
@@ -186,7 +207,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is an array.
+     * @description Validate the value is `array`.
      * @example
      * validator.single([1, 2, 3]).array() // Passes
      * validator.single('hello').array() // Throws an error
@@ -206,7 +227,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a string. If the value is null, undefined or empty string, it will be ignored.
+     * @description Validates that the value is a `string`.
      * @example
      * validator.single('hello').string() // Passes
      * validator.single(1).string() // Throws an error
@@ -227,7 +248,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a boolean. If the value is null, undefined or empty string, it will be ignored.
+     * @description Validates that the value is a `boolean`.
      * @example
      * validator.single(true).boolean() // Passes
      * validator.single(1).boolean() // Throws an error
@@ -248,7 +269,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a number. If the value is null, undefined or empty string, it will be ignored.
+     * @description Validates that the value is a `number`.
      * @example
      * validator.single(1).number() // Passes
      * validator.single(1.1).number() // Passes
@@ -274,7 +295,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a non-negative number. It can be a fraction or zero.
+     * @description Validates that the value is a `non-negative number`. It can be a fraction or zero.
      * Allowed : 0, 1, 2, 3, 1.1, 2.2, 3.3, ...
      * @example
      * validator.single(0).nonNegativeNumber() // Passes
@@ -301,7 +322,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a positive number which is not negative and not zero. It can be a fraction.
+     * @description Validates that the value is a `positive number` which is not negative and not zero. It can be a fraction.
      * Allowed : 1, 2, 3, 1.1, 2.2, 3.3, ...
      * @example
      * validator.single(1).positiveNumber() // Passes
@@ -328,7 +349,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a natural number which is not negative and not a fraction, and not zero.
+     * @description Validates that the value is a `natural number` which is not negative and not a fraction, and not zero.
      * Allowed : 1, 2, 3, 4, 5, ...
      * @example
      * validator.single(1).naturalNumber() // Passes
@@ -355,7 +376,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a whole number which is not negative and not a fraction.
+     * @description Validates that the value is a `whole number` which is not negative and not a fraction.
      * Allowed : 0, 1, 2, 3, 4, 5, ...
      * @example
      * validator.single(0).wholeNumber() // Passes
@@ -382,7 +403,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is an integer. It can be a negative number, zero or positive number.
+     * @description Validates that the value is an `integer`. It can be a negative number, zero or positive number.
      * Allowed : -3, -2, -1, 0, 1, 2, 3, ...
      * @example
      * validator.single(0).integer() // Passes
@@ -409,7 +430,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a negative integer which is not a fraction, and less than zero.
+     * @description Validates that the value is a `negative integer` which is not a fraction, and less than zero.
      * Allowed : -3, -2, -1
      * @example
      * validator.single(-1).negativeInteger() // Passes
@@ -436,7 +457,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a valid email format.
+     * @description Validates that the value is a valid `email` format.
      * @example
      * validator.single('mustom@email.com').email() // Passes
      * validator.single('mustom').email() // Throws an error
@@ -461,7 +482,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a URL format. It should be start with http:// or https://.
+     * @description Validates that the value is a `URL` format. It should be start with http:// or https://.
      * @example
      * validator.single('http://mustom.com').url() // Passes
      * validator.single('https://mustom.com').url() // Passes
@@ -485,7 +506,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a IP format. It should be IPv4 or IPv6.
+     * @description Validates that the value is a valid `IP` format. It should be `IPv4` or `IPv6`.
      * @example
      * validator.single('192.168.0.1').ip() // Passes
      * validator.single('2001:0db8:85a3:0000:0000:8a2e:0370:7334').ip() // Passes
@@ -511,9 +532,9 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a code format that is used in Mustom.
+     * @description Validates that the value is a `code` format that is used in Mustom.
      * It should be start with alphabet and contain only number, alphabet, underscore, and hyphen.
-     * Max length is 50 characters.
+     * @note Max length is 50 characters.
      * @example
      * validator.single('mustom-123').code() // Passes
      * validator.single('mustom@123').code() // Throws an error
@@ -548,9 +569,9 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a path format that is used in Mustom.
+     * @description Validates that the value is a `path` format that is used in Mustom.
      * It should be contain only number, alphabet, underscore, and hyphen.
-     * Max length is 50 characters.
+     * @note Max length is 50 characters.
      * @example
      * validator.single('mustom-123').path() // Passes
      * validator.single('mustom@123').path() // Throws an error
@@ -578,9 +599,8 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is an injection safe string.
-     * It should be contain only number, alphabet, underscore, dot, 골뱅이 and hyphen.
-     * It used for admin username.
+     * @description Validates that the value is an `injection safe string`.
+     * It should be contain only number, alphabet, underscore, dot, at sign and hyphen.
      * @example
      * validator.single('mustom-123').code() // Passes
      * validator.single('mustom@123').code() // Passes
@@ -608,8 +628,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is an alphabet.
-     * It should be contain only alphabet characters (A-Z, a-z).
+     * @description Validates that the value is an `alphabet`.
      * @example
      * validator.single('mustom').alphabet() // Passes
      * validator.single('MUSTOM').alphabet() // Passes
@@ -634,8 +653,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a capital letter.
-     * It should be contain only capital letters (A-Z).
+     * @description Validates that the value is a `capital letter`.
      * @example
      * validator.single('MUSTOM').uppercase() // Passes
      * validator.single('mustom').uppercase() // Throws an error
@@ -660,8 +678,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a lowercase letter.
-     * It should be contain only lowercase letters (a-z).
+     * @description Validates that the value is a `lowercase letter`.
      * @example
      * validator.single('mustom').lowercase() // Passes
      * validator.single('MUSTOM').lowercase() // Throws an error
@@ -686,8 +703,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is an alphanumeric string.
-     * It should be contain only number and alphabet characters (A-Z, a-z, 0-9).
+     * @description Validates that the value is an `alphanumeric` string.
      * @example
      * validator.single('mustom').alphaNumeric() // Passes
      * validator.single('MUSTOM123').alphaNumeric() // Passes
@@ -716,9 +732,8 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a valid password format. (Used in Mustom Admin)
-     * It should be minimum eight characters, maximum twenty characters, at least one letter, one number and one special character.
-     * If the value is null, undefined or empty string, it will be ignored.
+     * @description Validates that the value is a valid `password` format. (Used in Mustom Admin)
+     * @note It should be minimum eight characters, maximum twenty characters, at least one letter, one number and one special character.
      * @example
      * validator.single('Password1!').password() // Passes
      * validator.single('Pass1!').password() // Throws an error
@@ -743,9 +758,8 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is an image file format.
-     * It should be end with one of the following extensions: jpg, jpeg, png, gif, bmp, tiff, tif, svg, webp.
-     * If the value is null, undefined or empty string, it will be ignored.
+     * @description Validates that the value is an `image file` format.
+     * @note It should be end with one of the following extensions: jpg, jpeg, png, gif, bmp, tiff, tif, svg, webp.
      * @example
      * validator.single('image.jpg').imageFile() // Passes
      * validator.single('image.png').imageFile() // Passes
@@ -782,8 +796,8 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a valid date time format.
-     * It can be in various formats including common date/time format and ISO 8601 formats.
+     * @description Validates that the value is a valid `date time` format.
+     * @note It can be in various formats including common date/time format and ISO 8601 formats.
      * @example
      * validator.single('2023-01-05 09:05:02').dateTime() // Passes
      * validator.single('2023-01-05T09:05:02Z').dateTime() // Passes
@@ -872,7 +886,7 @@ const dataType = {
         return this
     },
     /**
-     * Validate the value is a valid ISO 8601 date format (YYYY-MM-DD).
+     * @description Validates that the value is a valid `ISO 8601 date` format (YYYY-MM-DD).
      * @example
      * validator.single('2023-01-05').dateOnly() // Passes
      * validator.single('2023-1-5').dateOnly() // Throws an error

@@ -5,6 +5,10 @@
     </a>
 </p>
 
+##
+This library is NOT stable yet. Please do NOT use it for your actual project until Ver. 1.0.0
+I need to test it more...
+
 ## About This Library
 This library was made specifically for the Mustom e-commerce platform. It provides a comprehensive set of validation methods to ensure data integrity and consistency across various use cases. The library is designed to be flexible and extensible, allowing developers to easily add custom validation rules as needed.
 

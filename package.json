@@ -1,6 +1,6 @@
 {
     "name": "mustom-validator",
-    "version": "0.0.10",
+    "version": "0.0.2",
     "description": "Lightweight yet powerful, highly extensible validation/sanitization library",
     "homepage": "https://mustom.com",
     "bugs": {
@@ -19,8 +19,14 @@
         "linkedin": "https://www.linkedin.com/in/chancehouse/",
         "facebook": "https://www.facebook.com/redcomma"
     },
-    "type": "commonjs",
-    "main": "index.js",
+    "main": "./cjs/index.cjs",
+    "module": "./mjs/index.mjs",
+    "exports": {
+        ".": {
+        "import": "./mjs/index.mjs",
+        "require": "./cjs/index.cjs"
+        }
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },

@@ -1,16 +1,19 @@
 // MUSTOM, More Than Custom, https://mustom.com
 // Copyright © Ryu Woosik. All rights reserved.
 
-const comparison = require('./method/comparison.js')
-const condition = require('./method/condition.js')
-const dataType = require('./method/data-type.js')
-const regex = require('./method/regex.js')
-const dataTransformation = require('./method/data-transformation.js')
-const misc = require('./method/misc.js')
-const { errorHandler } = require('./util/error-handler.js')
-const { dataTypeChecker } = require('./util/data-type-checker.js')
+import comparison from './method/comparison.mjs'
+import condition from './method/condition.mjs'
+import dataType from './method/data-type.mjs'
+import regex from './method/regex.mjs'
+import dataTransformation from './method/data-transformation.mjs'
+import misc from './method/misc.mjs'
+import { errorHandler } from './error-handling/error-handler.mjs'
+import { dataTypeChecker } from './util/data-type-checker.mjs'
 
-const validator = function () {
+/**
+ * @description Main Validator function.
+ */
+const Validator = function () {
     this.input = null
     this.argument = null
     this.refinement = null
@@ -32,9 +35,12 @@ const validator = function () {
     return this
 }
 
-/** Validate a single input value against specified rules.
+/**
+ * @description Validate a single input value against specified rules.
+ * @param {*} input - The input value to be validated.
+ * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.single = function (input, option = {}) {
+Validator.prototype.single = function (input, option = {}) {
     this.input = input
     this.refinement = input
     this.option = { ...this.option, ...option }
@@ -42,9 +48,13 @@ validator.prototype.single = function (input, option = {}) {
     return this
 }
 
-/** Validate each property in an object against specified rules.
+/**
+ * @description Validate each property in an object against specified rules.
+ * @param {Object} input - The input object to be validated.
+ * @param {Object} rule - The rules for validating each property.
+ * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.objectIterate = function (input, rule, option = {}) {
+Validator.prototype.objectIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule)
 
@@ -169,9 +179,13 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
     return this
 }
 
-/** Validate each object in an array against a specified rule.
+/**
+ * @description Validate each object in an array against a specified rule.
+ * @param {Array} input - The input array of objects to be validated.
+ * @param {Object} rule - The rules for validating each object.
+ * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
+Validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule)
 
@@ -225,9 +239,12 @@ validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
 }
 
 /**
- * Validate each item in an array against a specified rule.
+ * @description Validate each item in an array against a specified rule.
+ * @param {Array} input - The input array to be validated.
+ * @param {Function} rule - The rule for validating each item.
+ * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.arrayIterate = function (input, rule, option = {}) {
+Validator.prototype.arrayIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule, { showMisc: true })
 
@@ -371,9 +388,13 @@ validator.prototype.arrayIterate = function (input, rule, option = {}) {
     return this
 }
 
-/** Validate each item in a set against a specified rule.
+/**
+ * @description Validate each item in a set against a specified rule.
+ * @param {Set} input - The input set to be validated.
+ * @param {Function} rule - The rule for validating each item.
+ * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.setIterate = function (input, rule, option = {}) {
+Validator.prototype.setIterate = function (input, rule, option = {}) {
 
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule, { showMisc: true })
@@ -503,13 +524,11 @@ validator.prototype.setIterate = function (input, rule, option = {}) {
 }
 
 // Mixin methods from other modules
-Object.assign(validator.prototype, comparison)
-Object.assign(validator.prototype, condition)
-Object.assign(validator.prototype, dataType)
-Object.assign(validator.prototype, regex)
-Object.assign(validator.prototype, dataTransformation)
-Object.assign(validator.prototype, misc)
+Object.assign(Validator.prototype, comparison)
+Object.assign(Validator.prototype, condition)
+Object.assign(Validator.prototype, dataType)
+Object.assign(Validator.prototype, regex)
+Object.assign(Validator.prototype, dataTransformation)
+Object.assign(Validator.prototype, misc)
 
-module.exports = {
-    validator: new validator()
-}
+export const validator = new Validator()
