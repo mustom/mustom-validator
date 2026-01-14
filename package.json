@@ -1,6 +1,6 @@
 {
     "name": "mustom-validator",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Lightweight yet powerful, highly extensible validation/sanitization library",
     "homepage": "https://mustom.com",
     "bugs": {
@@ -20,10 +20,10 @@
         "facebook": "https://www.facebook.com/redcomma"
     },
     "main": "./cjs/index.cjs",
-    "module": "./mjs/index.mjs",
+    "module": "./esm/index.mjs",
     "exports": {
         ".": {
-        "import": "./mjs/index.mjs",
+        "import": "./esm/index.mjs",
         "require": "./cjs/index.cjs"
         }
     },
