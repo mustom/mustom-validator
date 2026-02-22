@@ -41,7 +41,7 @@ const Validator = function () {
  * @param {*} input - The input value to be validated.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.single = function (input, option = {}) {
+Validator.prototype.single = function (input, option = {}) {
     this.input = input
     this.refinement = input
     this.option = { ...this.option, ...option }
@@ -55,7 +55,7 @@ validator.prototype.single = function (input, option = {}) {
  * @param {Object} rule - The rules for validating each property.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.objectIterate = function (input, rule, option = {}) {
+Validator.prototype.objectIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule)
 
@@ -190,7 +190,7 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
  * @param {Object} rule - The rules for validating each object.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
+Validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule)
 
@@ -249,7 +249,7 @@ validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
  * @param {Function} rule - The rule for validating each item.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-validator.prototype.arrayIterate = function (input, rule, option = {}) {
+Validator.prototype.arrayIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule, { showMisc: true })
 
@@ -529,11 +529,11 @@ validator.prototype.setIterate = function (input, rule, option = {}) {
 }
 
 // Mixin methods from other modules
-Object.assign(validator.prototype, comparison)
-Object.assign(validator.prototype, condition)
-Object.assign(validator.prototype, dataType)
-Object.assign(validator.prototype, regex)
-Object.assign(validator.prototype, dataTransformation)
-Object.assign(validator.prototype, misc)
+Object.assign(Validator.prototype, comparison)
+Object.assign(Validator.prototype, condition)
+Object.assign(Validator.prototype, dataType)
+Object.assign(Validator.prototype, regex)
+Object.assign(Validator.prototype, dataTransformation)
+Object.assign(Validator.prototype, misc)
 
 export const validator = new Validator()
