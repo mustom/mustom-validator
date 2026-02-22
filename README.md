@@ -127,6 +127,9 @@ This option is only applied for arrayIterate, setIterate when 'itemValidationMod
 #### entryValidationMode ('strict', 'flexible')
 This option is only applied for objectIterable, and arrayObjectIterate. If it is 'strict', validator will throw error if there is any key that is not defined in the rules. If it is 'flexible', validator will ignore any extra keys that are not defined in the rules. The default value is 'strict'.
 
+#### optionalKey (array of strings)
+This option is only applied for objectIterable, and arrayObjectIterate. It defines the keys that are allowed to be missing in the input data. The default value is an empty array.
+
 #### stripUndefinedKey (true, false)
 This option is only applied for objectIterable, and arrayObjectIterate. If it is set as true, validator will remove keys from the refinement that are not defined in the rules. If it is set as false, this element still in the refinement. The default value is false.
 

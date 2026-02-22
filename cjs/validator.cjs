@@ -24,6 +24,7 @@ const validator = function () {
         itemValidationMode: 'all', // all, any, none, one, atLeast, atMost, exactly
         itemValidationThreshold: null, // Used for 'atLeast', 'atMost', 'exactly' modes
         entryValidationMode: 'strict', // strict, flexible
+        optionalKey: [], // Array of keys that are allowed to be missing in objectIterate
         stripUndefinedKey: false,
         softFail: false,
         abortEarly: false, // Stop validation on first error if true
@@ -96,19 +97,23 @@ validator.prototype.objectIterate = function (input, rule, option = {}) {
 
     for (const key in rule) {
 
-        const target = input[key]
         const targetRule = rule[key]
 
-        // Throw error if the key is not defined in the input
-        if (!target) {
-            errorHandler(this, 'ValidationError', `'${key}' is required.`)
-            continue
-        }
-        
         this.input = input[key]
         this.dataType = dataTypeChecker(this.input)
         this.refinement = input[key]
         this.key = key
+
+        // Ignore missing fields if they are listed in optionalKey
+        if (!(key in input) && this.option.optionalKey && this.option.optionalKey.includes(key)) {
+            continue
+        }
+
+        // Throw error for missing required fields
+        if (!(key in input)) {
+            errorHandler(this, 'ValidationError', `'${key}' is required.`)
+            continue
+        }
 
         const targetRuleDataType = dataTypeChecker(targetRule, { showMisc: true })
         

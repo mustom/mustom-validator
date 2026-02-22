@@ -24,6 +24,7 @@ const Validator = function () {
         itemValidationMode: 'all', // all, any, none, one, atLeast, atMost, exactly
         itemValidationThreshold: null, // Used for 'atLeast', 'atMost', 'exactly' modes
         entryValidationMode: 'strict', // strict, flexible
+        optionalKey: [], // Array of keys that are allowed to be missing in objectIterate
         stripUndefinedKey: false,
         softFail: false,
         abortEarly: false, // Stop validation on first error if true
@@ -40,7 +41,7 @@ const Validator = function () {
  * @param {*} input - The input value to be validated.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-Validator.prototype.single = function (input, option = {}) {
+validator.prototype.single = function (input, option = {}) {
     this.input = input
     this.refinement = input
     this.option = { ...this.option, ...option }
@@ -54,7 +55,7 @@ Validator.prototype.single = function (input, option = {}) {
  * @param {Object} rule - The rules for validating each property.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-Validator.prototype.objectIterate = function (input, rule, option = {}) {
+validator.prototype.objectIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule)
 
@@ -96,19 +97,23 @@ Validator.prototype.objectIterate = function (input, rule, option = {}) {
 
     for (const key in rule) {
 
-        const target = input[key]
         const targetRule = rule[key]
 
-        // Throw error if the key is not defined in the input
-        if (!target) {
-            errorHandler(this, 'ValidationError', `'${key}' is required.`)
-            continue
-        }
-        
         this.input = input[key]
         this.dataType = dataTypeChecker(this.input)
         this.refinement = input[key]
         this.key = key
+
+        // Ignore missing fields if they are listed in optionalKey
+        if (!(key in input) && this.option.optionalKey && this.option.optionalKey.includes(key)) {
+            continue
+        }
+
+        // Throw error for missing required fields
+        if (!(key in input)) {
+            errorHandler(this, 'ValidationError', `'${key}' is required.`)
+            continue
+        }
 
         const targetRuleDataType = dataTypeChecker(targetRule, { showMisc: true })
         
@@ -185,7 +190,7 @@ Validator.prototype.objectIterate = function (input, rule, option = {}) {
  * @param {Object} rule - The rules for validating each object.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-Validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
+validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule)
 
@@ -244,7 +249,7 @@ Validator.prototype.arrayObjectIterate = function (input, rule, option = {}) {
  * @param {Function} rule - The rule for validating each item.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-Validator.prototype.arrayIterate = function (input, rule, option = {}) {
+validator.prototype.arrayIterate = function (input, rule, option = {}) {
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule, { showMisc: true })
 
@@ -394,7 +399,7 @@ Validator.prototype.arrayIterate = function (input, rule, option = {}) {
  * @param {Function} rule - The rule for validating each item.
  * @param {Object} [option={}] - Optional settings for validation.
  */
-Validator.prototype.setIterate = function (input, rule, option = {}) {
+validator.prototype.setIterate = function (input, rule, option = {}) {
 
     const inputDataType = dataTypeChecker(input)
     const ruleDataType = dataTypeChecker(rule, { showMisc: true })
@@ -524,11 +529,11 @@ Validator.prototype.setIterate = function (input, rule, option = {}) {
 }
 
 // Mixin methods from other modules
-Object.assign(Validator.prototype, comparison)
-Object.assign(Validator.prototype, condition)
-Object.assign(Validator.prototype, dataType)
-Object.assign(Validator.prototype, regex)
-Object.assign(Validator.prototype, dataTransformation)
-Object.assign(Validator.prototype, misc)
+Object.assign(validator.prototype, comparison)
+Object.assign(validator.prototype, condition)
+Object.assign(validator.prototype, dataType)
+Object.assign(validator.prototype, regex)
+Object.assign(validator.prototype, dataTransformation)
+Object.assign(validator.prototype, misc)
 
 export const validator = new Validator()
